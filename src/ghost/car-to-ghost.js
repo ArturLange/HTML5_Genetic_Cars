@@ -1,55 +1,55 @@
+function ghostGetChassis(c) {
+    const gc = [];
 
-module.exports = function(car) {
-  var out = {
-    chassis: ghost_get_chassis(car.chassis),
-    wheels: [],
-    pos: {x: car.chassis.GetPosition().x, y: car.chassis.GetPosition().y}
-  };
+    for (let f = c.GetFixtureList(); f; f = f.m_next) {
+        const s = f.GetShape();
 
-  for (var i = 0; i < car.wheels.length; i++) {
-    out.wheels[i] = ghost_get_wheel(car.wheels[i]);
-  }
+        const p = {
+            vtx: [],
+            num: 0,
+        };
 
-  return out;
-}
+        p.num = s.m_vertexCount;
 
-function ghost_get_chassis(c) {
-  var gc = [];
+        for (let i = 0; i < s.m_vertexCount; i++) {
+            p.vtx.push(c.GetWorldPoint(s.m_vertices[i]));
+        }
 
-  for (var f = c.GetFixtureList(); f; f = f.m_next) {
-    var s = f.GetShape();
-
-    var p = {
-      vtx: [],
-      num: 0
+        gc.push(p);
     }
 
-    p.num = s.m_vertexCount;
-
-    for (var i = 0; i < s.m_vertexCount; i++) {
-      p.vtx.push(c.GetWorldPoint(s.m_vertices[i]));
-    }
-
-    gc.push(p);
-  }
-
-  return gc;
+    return gc;
 }
 
-function ghost_get_wheel(w) {
-  var gw = [];
+function ghostGetWheel(w) {
+    const gw = [];
 
-  for (var f = w.GetFixtureList(); f; f = f.m_next) {
-    var s = f.GetShape();
+    for (let f = w.GetFixtureList(); f; f = f.m_next) {
+        const s = f.GetShape();
 
-    var c = {
-      pos: w.GetWorldPoint(s.m_p),
-      rad: s.m_radius,
-      ang: w.m_sweep.a
+        const c = {
+            pos: w.GetWorldPoint(s.m_p),
+            rad: s.m_radius,
+            ang: w.m_sweep.a,
+        };
+
+        gw.push(c);
     }
 
-    gw.push(c);
-  }
-
-  return gw;
+    return gw;
 }
+
+
+module.exports = function (car) {
+    const out = {
+        chassis: ghostGetChassis(car.chassis),
+        wheels: [],
+        pos: { x: car.chassis.GetPosition().x, y: car.chassis.GetPosition().y },
+    };
+
+    for (let i = 0; i < car.wheels.length; i++) {
+        out.wheels[i] = ghostGetWheel(car.wheels[i]);
+    }
+
+    return out;
+};

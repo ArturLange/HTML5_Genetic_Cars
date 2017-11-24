@@ -1,5 +1,5 @@
 
 module.exports = generateRandom;
-function generateRandom(){
-  return Math.random();
+function generateRandom() {
+    return Math.random();
 }

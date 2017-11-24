@@ -3,7 +3,7 @@
 module.exports = function(container, def){
   var graph = prepareGraph(container);
   return updateGraph(graph, def);
-}
+};
 module.exports.prepareGraph = prepareGraph;
 module.exports.updateGraph = updateGraph;
 
@@ -27,7 +27,7 @@ function prepareGraph(container){
     	.attr("height", height)
       .append("g"),
     height: height,
-    width: width,
+    width: width
   }
 
 
@@ -166,8 +166,8 @@ function defToAncestryTree(def){
         var next = [];
         children.push({
           name: maybeAncestor,
-          children: next,
-        })
+          children: next
+        });
         return next;
       }
       if(Array.isArray(maybeAncestor)){

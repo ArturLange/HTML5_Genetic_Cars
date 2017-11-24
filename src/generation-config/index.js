@@ -1,27 +1,28 @@
-var carConstruct = require("../car-schema/construct.js");
+let carConstruct = require('../car-schema/construct.js');
 
-var carConstants = carConstruct.carConstants();
+let carConstants = carConstruct.carConstants();
 
-var schema = carConstruct.generateSchema(carConstants);
-var pickParent = require("./pickParent");
-var selectFromAllParents = require("./selectFromAllParents");
+let schema = carConstruct.generateSchema(carConstants);
+let pickParent = require('./pickParent');
+let selectFromAllParents = require('./selectFromAllParents');
+
 const constants = {
   generationSize: 20,
-  schema: schema,
+  schema,
   championLength: 1,
   mutation_range: 1,
   gen_mutation: 0.05,
 };
-module.exports = function(){
-  var currentChoices = new Map();
+module.exports = function () {
+  let currentChoices = new Map();
   return Object.assign(
     {},
     constants,
     {
-      selectFromAllParents: selectFromAllParents,
-      generateRandom: require("./generateRandom"),
+      selectFromAllParents,
+      generateRandom: require('./generateRandom'),
       pickParent: pickParent.bind(void 0, currentChoices),
-    }
+    },
   );
-}
-module.exports.constants = constants
+};
+module.exports.constants = constants;

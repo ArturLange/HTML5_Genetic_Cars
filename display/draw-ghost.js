@@ -15,9 +15,9 @@ module.exports.svg = function(container, frame){
   function renderWheels(wheels){
     return wheels.map(function(wheelList){
       return wheelList.map(function(wheel){
-        var fillStyle = "#eee";
-        var strokeStyle = "#aaa";
-        var center = wheel.pos, radius = wheel.rad, angle = wheel.ang;
+        const fillStyle = "#eee";
+        const strokeStyle = "#aaa";
+        const center = wheel.pos, radius = wheel.rad, angle = wheel.ang;
         return `
           <circle
             cx="${center.x}"

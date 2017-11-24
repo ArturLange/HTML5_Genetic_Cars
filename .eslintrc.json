@@ -2,11 +2,10 @@
   "env": { },
   "plugins": [],
   "extends": [
-    "eslint:recommended"
+    "airbnb"
   ],
   "globals": {
     "Promise": true,
-    "console": true,
     "require": true,
     "Set": true,
     "Map": true,
@@ -20,13 +19,16 @@
     "module": true
   },
   "parserOptions": {
-    "ecmaVersion": 5,
+    "ecmaVersion": 6,
     "sourceType": "module",
     "impliedStrict": true
   },
   "rules": {
-    "no-use-before-define": [2, { "functions": false }],
-    "no-mixed-spaces-and-tabs": 0,
-    "no-console": 0
+    "no-use-before-define": ["error", { "functions": true, "classes": true }],
+    "no-mixed-spaces-and-tabs": "error",
+    "no-console": "warn",
+    "no-plusplus": "off",
+    "no-param-reassign": "warn",
+    "indent": ["error", 4]
   }
 }
