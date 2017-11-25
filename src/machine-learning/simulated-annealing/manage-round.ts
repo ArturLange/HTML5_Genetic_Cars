@@ -1,11 +1,6 @@
-var create = require("../create-instance");
+import create = require("../create-instance");
 
-module.exports = {
-  generationZero: generationZero,
-  nextGeneration: nextGeneration,
-}
-
-function generationZero(config){
+export function generationZero(config){
   var oldStructure = create.createGenerationZero(
     config.schema, config.generateRandom
   );
@@ -20,7 +15,7 @@ function generationZero(config){
   }
 }
 
-function nextGeneration(previousState, scores, config){
+export function nextGeneration(previousState, scores, config){
   var nextState = {
     k: (previousState.k + 1)%config.generationSize,
     counter: previousState.counter + (previousState.k === config.generationSize ? 1 : 0)

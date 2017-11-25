@@ -2,11 +2,8 @@
 /* globals b2Vec2 */
 // Global Vars
 
-var worldRun = require("./world/run");
-
-var graph_fns = require("./draw/plot-graphs");
-var plot_graphs = graph_fns.plotGraphs;
-
+import * as worldRun from "./world/run";
+import { plotGraphs } from './draw/plot-graphs';
 
 // ======= WORLD STATE ======
 
@@ -33,7 +30,7 @@ function updateUI(key, scores){
   console.log($newGraph);
   var scatterPlotElem = $newGraph.querySelector(".scatterplot");
   scatterPlotElem.id = "graph-" + key + "-scatter";
-  graphState[key] = plot_graphs(
+  graphState[key] = plotGraphs(
     $newGraph.querySelector(".graphcanvas"),
     $newGraph.querySelector(".topscores"),
     scatterPlotElem,
@@ -43,7 +40,7 @@ function updateUI(key, scores){
   );
 }
 
-var generationConfig = require("./generation-config");
+import * as generationConfig from "./generation-config";
 
 var box2dfps = 60;
 var max_car_health = box2dfps * 10;
@@ -60,6 +57,8 @@ var world_def = {
   max_car_health: max_car_health,
   schema: generationConfig.constants.schema
 }
+
+
 
 var manageRound = {
   genetic: require("./machine-learning/genetic-algorithm/manage-round"),
@@ -151,18 +150,18 @@ function cw_resetWorld() {
 }
 
 document.querySelector("#new-population").addEventListener("click", function(){
-  cw_resetPopulationUI()
+  cw_resetPopulationUI();
   generationZero();
-})
+});
 
 
 document.querySelector("#confirm-reset").addEventListener("click", function(){
   cw_confirmResetWorld()
-})
+});
 
 document.querySelector("#fast-forward").addEventListener("click", function(){
   runRound();
-})
+});
 
 function cw_confirmResetWorld() {
   if (confirm('Really reset world?')) {

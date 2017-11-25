@@ -1,13 +1,4 @@
-
-
-module.exports = {
-  getInitialState: getInitialState,
-  updateState: updateState,
-  getStatus: getStatus,
-  calculateScore: calculateScore,
-};
-
-function getInitialState(world_def){
+export function getInitialState(world_def){
   return {
     frames: 0,
     health: world_def.max_car_health,
@@ -17,7 +8,7 @@ function getInitialState(world_def){
   };
 }
 
-function updateState(constants, worldConstruct, state){
+export function updateState(constants, worldConstruct, state){
   if(state.health <= 0){
     throw new Error("Already Dead");
   }
@@ -51,7 +42,7 @@ function updateState(constants, worldConstruct, state){
   return nextState;
 }
 
-function getStatus(state, constants){
+export function getStatus(state, constants){
   if(hasFailed(state, constants)) return -1;
   if(hasSuccess(state, constants)) return 1;
   return 0;
@@ -64,7 +55,7 @@ function hasSuccess(state, constants){
   return state.maxPositionx > constants.finishLine;
 }
 
-function calculateScore(state, constants){
+export function calculateScore(state, constants){
   var avgspeed = (state.maxPositionx / state.frames) * constants.box2dfps;
   var position = state.maxPositionx;
   var score = position + avgspeed;

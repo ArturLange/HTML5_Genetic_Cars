@@ -29,6 +29,8 @@
     "ts-loader": "^3.1.1"
   },
   "dependencies": {
+    "@types/d3": "^3.5.17",
+    "d3": "^3.5.17",
     "mersenne-twister": "^1.1.0",
     "typescript": "^2.6.1",
     "watch-run": "^1.2.5",

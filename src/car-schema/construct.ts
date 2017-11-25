@@ -1,6 +1,6 @@
-var carConstants = require("./car-constants.json");
+import carConstants = require("./car-constants.json");
 
-module.exports = {
+export = {
   worldDef: worldDef,
   carConstants: getCarConstants,
   generateSchema: generateSchema

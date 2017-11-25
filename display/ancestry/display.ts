@@ -1,4 +1,6 @@
-/* globals d3 window */
+/* globals window */
+
+import * as d3 from "d3";
 
 module.exports = function (container, def) {
     var graph = prepareGraph(container);

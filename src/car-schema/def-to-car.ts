@@ -2,7 +2,7 @@
   globals b2RevoluteJointDef b2Vec2 b2BodyDef b2Body b2FixtureDef b2PolygonShape b2CircleShape
 */
 
-var createInstance = require("../machine-learning/create-instance");
+import { applyTypes } from '../machine-learning/create-instance';
 
 function createChassisPart(body, vertex1, vertex2, density) {
     var vertex_list = [];
@@ -52,8 +52,8 @@ function createChassis(world, vertexs, density) {
     return body;
 }
 
-function defToCar(normalDef, world, constants) {
-    var car_def = createInstance.applyTypes(constants.schema, normalDef);
+export function defToCar(normalDef, world, constants) {
+    var car_def = applyTypes(constants.schema, normalDef);
     let instance = {};
     instance.chassis = createChassis(
         world, car_def.vertex_list, car_def.chassis_density
@@ -112,5 +112,3 @@ function createWheel(world, radius, density) {
     body.CreateFixture(fix_def);
     return body;
 }
-
-module.exports = defToCar;

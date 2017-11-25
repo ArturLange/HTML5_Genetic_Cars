@@ -2,18 +2,18 @@
 /* globals b2Vec2 */
 // Global Vars
 
-var worldRun = require("./world/run");
-var carConstruct = require("./car-schema/construct");
+import worldRun = require("./world/run");
+import carConstruct = require("./car-schema/construct");
 
-var manageRound = require("./machine-learning/genetic-algorithm/manage-round");
+import manageRound = require("./machine-learning/genetic-algorithm/manage-round");
 
-var ghost_fns = require("./ghost/index");
+import ghost_fns = require("./ghost/index");
 
-var drawCar = require("./draw/draw-car");
-var graph_fns = require("./draw/plot-graphs");
+import drawCar = require("./draw/draw-car");
+import graph_fns = require("./draw/plot-graphs");
 var plot_graphs = graph_fns.plotGraphs;
 var cw_clearGraphics = graph_fns.clearGraphics;
-var cw_drawFloor = require("./draw/draw-floor");
+import cw_drawFloor = require("./draw/draw-floor");
 
 var ghost_draw_frame = ghost_fns.ghost_draw_frame;
 var ghost_create_ghost = ghost_fns.ghost_create_ghost;
@@ -681,7 +681,7 @@ function cw_setMutableFloor(choice) {
 
 function cw_setGravity(choice) {
   world_def.gravity = new b2Vec2(0.0, -parseFloat(choice));
-  var world = currentRunner.scene.world
+  var world = currentRunner.scene.world;
   // CHECK GRAVITY CHANGES
   if (world.GetGravity().y != world_def.gravity.y) {
     world.SetGravity(world_def.gravity);

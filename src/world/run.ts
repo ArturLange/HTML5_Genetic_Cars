@@ -1,7 +1,7 @@
 /* globals btoa */
-var setupScene = require("./setup-scene");
-var carRun = require("../car-schema/run");
-var defToCar = require("../car-schema/def-to-car");
+import setupScene = require("./setup-scene");
+import carRun = require("../car-schema/run");
+import { defToCar } from "../car-schema/def-to-car");
 
 module.exports = runDefs;
 function runDefs(world_def, defs, listeners){
