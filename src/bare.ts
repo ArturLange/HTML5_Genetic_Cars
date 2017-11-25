@@ -2,9 +2,9 @@
 /* globals b2Vec2 */
 // Global Vars
 
-var worldRun = require("./world/run.js");
+var worldRun = require("./world/run");
 
-var graph_fns = require("./draw/plot-graphs.js");
+var graph_fns = require("./draw/plot-graphs");
 var plot_graphs = graph_fns.plotGraphs;
 
 
@@ -62,8 +62,8 @@ var world_def = {
 }
 
 var manageRound = {
-  genetic: require("./machine-learning/genetic-algorithm/manage-round.js"),
-  annealing: require("./machine-learning/simulated-annealing/manage-round.js"),
+  genetic: require("./machine-learning/genetic-algorithm/manage-round"),
+  annealing: require("./machine-learning/simulated-annealing/manage-round"),
 };
 
 var createListeners = function(key){

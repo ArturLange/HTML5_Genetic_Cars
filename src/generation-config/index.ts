@@ -1,4 +1,4 @@
-var carConstruct = require("../car-schema/construct.js");
+var carConstruct = require("../car-schema/construct");
 
 var carConstants = carConstruct.carConstants();
 

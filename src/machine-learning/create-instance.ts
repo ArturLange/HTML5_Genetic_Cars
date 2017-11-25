@@ -1,4 +1,4 @@
-var random = require("./random.js");
+var random = require("./random");
 
 module.exports = {
   createGenerationZero(schema, generator){

@@ -2,18 +2,18 @@
 /* globals b2Vec2 */
 // Global Vars
 
-var worldRun = require("./world/run.js");
-var carConstruct = require("./car-schema/construct.js");
+var worldRun = require("./world/run");
+var carConstruct = require("./car-schema/construct");
 
-var manageRound = require("./machine-learning/genetic-algorithm/manage-round.js");
+var manageRound = require("./machine-learning/genetic-algorithm/manage-round");
 
-var ghost_fns = require("./ghost/index.js");
+var ghost_fns = require("./ghost/index");
 
-var drawCar = require("./draw/draw-car.js");
-var graph_fns = require("./draw/plot-graphs.js");
+var drawCar = require("./draw/draw-car");
+var graph_fns = require("./draw/plot-graphs");
 var plot_graphs = graph_fns.plotGraphs;
 var cw_clearGraphics = graph_fns.clearGraphics;
-var cw_drawFloor = require("./draw/draw-floor.js");
+var cw_drawFloor = require("./draw/draw-floor");
 
 var ghost_draw_frame = ghost_fns.ghost_draw_frame;
 var ghost_create_ghost = ghost_fns.ghost_create_ghost;
@@ -21,12 +21,12 @@ var ghost_add_replay_frame = ghost_fns.ghost_add_replay_frame;
 var ghost_compare_to_replay = ghost_fns.ghost_compare_to_replay;
 var ghost_get_position = ghost_fns.ghost_get_position;
 var ghost_move_frame = ghost_fns.ghost_move_frame;
-var ghost_reset_ghost = ghost_fns.ghost_reset_ghost
+var ghost_reset_ghost = ghost_fns.ghost_reset_ghost;
 var ghost_pause = ghost_fns.ghost_pause;
 var ghost_resume = ghost_fns.ghost_resume;
 var ghost_create_replay = ghost_fns.ghost_create_replay;
 
-var cw_Car = require("./draw/draw-car-stats.js");
+var cw_Car = require("./draw/draw-car-stats");
 var ghost;
 var carMap = new Map();
 

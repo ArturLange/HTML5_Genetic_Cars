@@ -1,5 +1,5 @@
 
-var ghost_get_frame = require("./car-to-ghost.js");
+var ghost_get_frame = require("./car-to-ghost");
 
 var enable_ghost = true;
 
