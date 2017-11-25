@@ -1,8 +1,7 @@
 /* globals document confirm btoa */
 /* globals b2Vec2 */
 // Global Vars
-
-import * as worldRun from "./world/run";
+import { runDefs } from './world/run'
 import { plotGraphs } from './draw/plot-graphs';
 
 // ======= WORLD STATE ======
@@ -81,7 +80,7 @@ var createListeners = function(key){
 function generationZero(){
   var obj = Object.keys(manageRound).reduce(function(obj, key){
     obj.states[key] = manageRound[key].generationZero(generationConfig());
-    obj.runners[key] = worldRun(
+    obj.runners[key] = runDefs(
       world_def, obj.states[key].generation, createListeners(key)
     );
     obj.results[key] = [];
@@ -98,7 +97,7 @@ function handleRoundEnd(key, scores){
   states[key] = manageRound[key].nextGeneration(
     states[key], scores, generationConfig()
   );
-  runners[key] = worldRun(
+  runners[key] = runDefs(
     world_def, states[key].generation, createListeners(key)
   );
   if(states[key].counter === previousCounter){

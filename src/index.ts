@@ -2,7 +2,6 @@
 /* globals b2Vec2 */
 // Global Vars
 
-import worldRun = require("./world/run");
 import carConstruct = require("./car-schema/construct");
 
 import manageRound = require("./machine-learning/genetic-algorithm/manage-round");
@@ -14,6 +13,7 @@ import graph_fns = require("./draw/plot-graphs");
 var plot_graphs = graph_fns.plotGraphs;
 var cw_clearGraphics = graph_fns.clearGraphics;
 import cw_drawFloor = require("./draw/draw-floor");
+import { runDefs } from './world/run';
 
 var ghost_draw_frame = ghost_fns.ghost_draw_frame;
 var ghost_create_ghost = ghost_fns.ghost_create_ghost;
@@ -392,7 +392,7 @@ function cw_newRound(results) {
     // RE-ENABLE GHOST
     ghost_reset_ghost(ghost);
   }
-  currentRunner = worldRun(world_def, generationState.generation, uiListeners);
+  currentRunner = runDefs(world_def, generationState.generation, uiListeners);
   setupCarUI();
   cw_drawMiniMap();
   resetCarUI();
@@ -424,7 +424,7 @@ function cw_resetWorld() {
 
   Math.seedrandom();
   cw_generationZero();
-  currentRunner = worldRun(
+  currentRunner = runDefs(
     world_def, generationState.generation, uiListeners
   );
 
@@ -490,7 +490,7 @@ function restoreProgress() {
   world_def.floorseed = localStorage.cw_floorSeed;
   document.getElementById("newseed").value = world_def.floorseed;
 
-  currentRunner = worldRun(world_def, generationState.generation, uiListeners);
+  currentRunner = runDefs(world_def, generationState.generation, uiListeners);
   cw_drawMiniMap();
   Math.seedrandom();
 
@@ -586,7 +586,7 @@ function cw_init() {
   cw_generationZero();
   ghost = ghost_create_ghost();
   resetCarUI();
-  currentRunner = worldRun(world_def, generationState.generation, uiListeners);
+  currentRunner = runDefs(world_def, generationState.generation, uiListeners);
   setupCarUI();
   cw_drawMiniMap();
   cw_runningInterval = setInterval(simulationStep, Math.round(1000 / box2dfps));

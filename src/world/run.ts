@@ -3,8 +3,7 @@ import setupScene = require("./setup-scene");
 import carRun = require("../car-schema/run");
 import { defToCar } from "../car-schema/def-to-car");
 
-module.exports = runDefs;
-function runDefs(world_def, defs, listeners){
+export function runDefs(world_def, defs, listeners){
   if (world_def.mutable_floor) {
     // GHOST DISABLED
     world_def.floorseed = btoa(Math.seedrandom());
@@ -58,5 +57,4 @@ function runDefs(world_def, defs, listeners){
       }
     }
   }
-
 }
