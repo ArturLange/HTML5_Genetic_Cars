@@ -1,5 +1,4 @@
 // http://sunmingtao.blogspot.com/2016/11/inbreeding-coefficient.html
-module.exports = getInbreedingCoefficient;
 
 function getInbreedingCoefficient(child) {
     const nameIndex = new Map();
@@ -99,3 +98,5 @@ function getInbreedingCoefficient(child) {
         return [ci, cj];
     }
 }
+
+module.exports = getInbreedingCoefficient;

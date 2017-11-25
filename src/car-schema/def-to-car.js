@@ -27,7 +27,7 @@ function defToCar(normalDef, world, constants) {
     const jointDef = new b2RevoluteJointDef();
 
     for (i = 0; i < wheelCount; i++) {
-        const torque = carmass * -constants.gravity.y / carDef.wheel_radius[i];
+        const torque = (carmass * -constants.gravity.y) / carDef.wheel_radius[i];
 
         const randvertex = instance.chassis.vertex_list[carDef.wheel_vertex[i]];
         jointDef.localAnchorA.Set(randvertex.x, randvertex.y);

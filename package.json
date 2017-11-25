@@ -7,7 +7,8 @@
     "build": "npm run build-main && npm run build-graph",
     "build-main": "browserify --debug ./src/index.js -o ./bundle.js",
     "build-graph": "browserify --debug ./src/bare.js -o ./bundle-bare.js",
-    "lint": "eslint src",
+    "lint": "eslint src display",
+    "lint-fix": "eslint --fix src display",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": " npm run build && watch-run -p './src/**' npm run build"
   },

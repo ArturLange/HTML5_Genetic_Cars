@@ -1,5 +1,4 @@
 const nAttributes = 15;
-module.exports = pickParent;
 
 function pickParent(currentChoices, chooseId, key /* , parents */) {
     if (!currentChoices.has(chooseId)) {
@@ -45,3 +44,5 @@ function pickParent(currentChoices, chooseId, key /* , parents */) {
         };
     }
 }
+
+module.exports = pickParent;

@@ -38,7 +38,7 @@ function nextGeneration(previousState, scores, config) {
     if (scoreDiff > 0) {
         nextState.curDef = newDef;
         nextState.score = newScore;
-    // Else we want to increase likelyhood of changing location as we get
+        // Else we want to increase likelyhood of changing location as we get
     } else if (Math.random() > Math.exp(-scoreDiff / (nextState.k * temp))) {
         nextState.curDef = newDef;
         nextState.score = newScore;
@@ -64,6 +64,6 @@ function createStructure(config, mutationRange, parent) {
         generateRandom,
         parent,
         mutationRange,
-        genMutation,
+        genMutation
     );
 }
