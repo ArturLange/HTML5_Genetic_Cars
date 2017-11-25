@@ -12,8 +12,8 @@ import drawCar = require("./draw/draw-car");
 import graph_fns = require("./draw/plot-graphs");
 var plot_graphs = graph_fns.plotGraphs;
 var cw_clearGraphics = graph_fns.clearGraphics;
-import cw_drawFloor = require("./draw/draw-floor");
 import { runDefs } from './world/run';
+import { drawFloor } from './draw/draw-floor';
 
 var ghost_draw_frame = ghost_fns.ghost_draw_frame;
 var ghost_create_ghost = ghost_fns.ghost_create_ghost;
@@ -170,7 +170,7 @@ function cw_drawScreen() {
   var zoom = camera.zoom;
   ctx.translate(200 - (camera_x * zoom), 200 + (camera_y * zoom));
   ctx.scale(zoom, -zoom);
-  cw_drawFloor(ctx, camera, floorTiles);
+  drawFloor(ctx, camera, floorTiles);
   ghost_draw_frame(ctx, ghost, camera);
   cw_drawCars();
   ctx.restore();
@@ -220,7 +220,7 @@ function cw_drawGhostReplay() {
   ctx.scale(camera.zoom, -camera.zoom);
   ghost_draw_frame(ctx, ghost);
   ghost_move_frame(ghost);
-  cw_drawFloor(ctx, camera, floorTiles);
+  drawFloor(ctx, camera, floorTiles);
   ctx.restore();
 }
 

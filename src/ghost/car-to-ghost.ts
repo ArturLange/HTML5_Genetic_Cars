@@ -1,5 +1,5 @@
 
-module.exports = function(car) {
+export function ghostGetFrame(car) {
   var out = {
     chassis: ghost_get_chassis(car.chassis),
     wheels: [],

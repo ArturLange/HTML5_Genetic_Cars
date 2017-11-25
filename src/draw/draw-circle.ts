@@ -1,7 +1,4 @@
-
-module.exports = cw_drawCircle;
-
-function cw_drawCircle(ctx, body, center, radius, angle, color) {
+export function drawCircle(ctx, body, center, radius, angle, color) {
   var p = body.GetWorldPoint(center);
   ctx.fillStyle = color;
 

@@ -1,22 +1,8 @@
-
-var ghost_get_frame = require("./car-to-ghost");
+import { ghostGetFrame } from './car-to-ghost';
 
 var enable_ghost = true;
 
-module.exports = {
-  ghost_create_replay: ghost_create_replay,
-  ghost_create_ghost: ghost_create_ghost,
-  ghost_pause: ghost_pause,
-  ghost_resume: ghost_resume,
-  ghost_get_position: ghost_get_position,
-  ghost_compare_to_replay: ghost_compare_to_replay,
-  ghost_move_frame: ghost_move_frame,
-  ghost_add_replay_frame: ghost_add_replay_frame,
-  ghost_draw_frame: ghost_draw_frame,
-  ghost_reset_ghost: ghost_reset_ghost
-}
-
-function ghost_create_replay() {
+export function ghost_create_replay() {
   if (!enable_ghost)
     return null;
 
@@ -26,7 +12,7 @@ function ghost_create_replay() {
   }
 }
 
-function ghost_create_ghost() {
+export function ghost_create_ghost() {
   if (!enable_ghost)
     return null;
 
@@ -37,7 +23,7 @@ function ghost_create_ghost() {
   }
 }
 
-function ghost_reset_ghost(ghost) {
+export function ghost_reset_ghost(ghost) {
   if (!enable_ghost)
     return;
   if (ghost == null)
@@ -45,18 +31,18 @@ function ghost_reset_ghost(ghost) {
   ghost.frame = 0;
 }
 
-function ghost_pause(ghost) {
+export function ghost_pause(ghost) {
   if (ghost != null)
     ghost.old_frame = ghost.frame;
   ghost_reset_ghost(ghost);
 }
 
-function ghost_resume(ghost) {
+export function ghost_resume(ghost) {
   if (ghost != null)
     ghost.frame = ghost.old_frame;
 }
 
-function ghost_get_position(ghost) {
+export function ghost_get_position(ghost) {
   if (!enable_ghost)
     return;
   if (ghost == null)
@@ -69,7 +55,7 @@ function ghost_get_position(ghost) {
   return frame.pos;
 }
 
-function ghost_compare_to_replay(replay, ghost, max) {
+export function ghost_compare_to_replay(replay, ghost, max) {
   if (!enable_ghost)
     return;
   if (ghost == null)
@@ -84,7 +70,7 @@ function ghost_compare_to_replay(replay, ghost, max) {
   }
 }
 
-function ghost_move_frame(ghost) {
+export function ghost_move_frame(ghost) {
   if (!enable_ghost)
     return;
   if (ghost == null)
@@ -96,18 +82,18 @@ function ghost_move_frame(ghost) {
     ghost.frame = ghost.replay.num_frames - 1;
 }
 
-function ghost_add_replay_frame(replay, car) {
+export function ghost_add_replay_frame(replay, car) {
   if (!enable_ghost)
     return;
   if (replay == null)
     return;
 
-  var frame = ghost_get_frame(car);
+  var frame = ghostGetFrame(car);
   replay.frames.push(frame);
   replay.num_frames++;
 }
 
-function ghost_draw_frame(ctx, ghost, camera) {
+export function ghost_draw_frame(ctx, ghost, camera) {
   var zoom = camera.zoom;
   if (!enable_ghost)
     return;

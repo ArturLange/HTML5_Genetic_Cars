@@ -1,5 +1,6 @@
-var cw_drawVirtualPoly = require("./draw-virtual-poly");
-module.exports = function(ctx, camera, cw_floorTiles) {
+import { drawVirtualPoly } from './draw-virtual-poly';
+
+export function drawFloor(ctx, camera, cw_floorTiles) {
   var camera_x = camera.pos.x;
   var zoom = camera.zoom;
   ctx.strokeStyle = "#000";
@@ -23,7 +24,7 @@ module.exports = function(ctx, camera, cw_floorTiles) {
         var s = f.GetShape();
         var shapePosition = b.GetWorldPoint(s.m_vertices[0]).x;
         if ((shapePosition > (camera_x - 5)) && (shapePosition < (camera_x + 10))) {
-          cw_drawVirtualPoly(ctx, b, s.m_vertices, s.m_vertexCount);
+          drawVirtualPoly(ctx, b, s.m_vertices, s.m_vertexCount);
         }
         if (shapePosition > camera_x + 10) {
           break outer_loop;

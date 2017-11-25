@@ -1,6 +1,4 @@
-
-
-module.exports = function(ctx, body, vtx, n_vtx) {
+export function drawVirtualPoly(ctx, body, vtx, n_vtx) {
   // set strokestyle and fillstyle before call
   // call beginPath before call
 
