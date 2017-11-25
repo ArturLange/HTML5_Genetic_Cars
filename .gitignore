@@ -1,6 +1,8 @@
 /node_modules
 bundle.js
-bundle-bare.js
+bundle.js.map
+bundle_bare.js
+bundle_bare.js.map
 
 #################
 ## Eclipse
