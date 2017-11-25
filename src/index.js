@@ -13,27 +13,27 @@ const drawCar = require('./draw/draw-car.js');
 const graphFns = require('./draw/plot-graphs.js');
 
 const plotGraphs = graphFns.plotGraphs;
-const cw_clearGraphics = graphFns.clearGraphics;
-const cw_drawFloor = require('./draw/draw-floor.js');
+const cwClearGraphics = graphFns.clearGraphics;
+const cwDrawFloor = require('./draw/draw-floor.js');
 
-const ghost_draw_frame = ghostFns.ghostDrawFrame;
-const ghost_create_ghost = ghostFns.ghostCreateGhost;
-const ghost_add_replay_frame = ghostFns.ghostAddReplayFrame;
-const ghost_compare_to_replay = ghostFns.ghostCompareToReplay;
-const ghost_get_position = ghostFns.ghostGetPosition;
-const ghost_move_frame = ghostFns.ghostMoveFrame;
-const ghost_reset_ghost = ghostFns.ghostResetGhost;
-const ghost_pause = ghostFns.ghostPause;
-const ghost_resume = ghostFns.ghostResume;
-const ghost_create_replay = ghostFns.ghostCreateReplay;
+const ghostDrawFrame = ghostFns.ghostDrawFrame;
+const ghostCreateGhost = ghostFns.ghostCreateGhost;
+const ghostAddReplayFrame = ghostFns.ghostAddReplayFrame;
+const ghostCompareToReplay = ghostFns.ghostCompareToReplay;
+const ghostGetPosition = ghostFns.ghostGetPosition;
+const ghostMoveFrame = ghostFns.ghostMoveFrame;
+const ghostResetGhost = ghostFns.ghostResetGhost;
+const ghostPause = ghostFns.ghostPause;
+const ghostResume = ghostFns.ghostResume;
+const ghostCreateReplay = ghostFns.ghostCreateReplay;
 
-const cw_Car = require('./draw/draw-car-stats.js');
+const cwCar = require('./draw/draw-car-stats.js');
 
 let ghost;
 const carMap = new Map();
 
 let doDraw = true;
-let cw_paused = false;
+let cwPaused = false;
 
 const box2dfps = 60;
 const screenfps = 60;
@@ -95,7 +95,7 @@ const worldDef = {
     schema: generationConfig.constants.schema,
 };
 
-let cw_deadCars;
+let cwDeadCars;
 let graphState = {
     cw_topScores: [],
     cw_graphAverage: [],
@@ -118,15 +118,15 @@ function resetGraphState() {
 let generationState;
 
 // ======== Activity State ====
-let cw_runningInterval;
-let cw_drawInterval;
+let cwRunningInterval;
+let cwDrawInterval;
 let currentRunner;
 
 function showDistance(distance, height) {
     distanceMeter.innerHTML = `${distance} meters<br />`;
     heightMeter.innerHTML = `${height} meters`;
     if (distance > minimapfogdistance) {
-        fogdistance.width = `${800 - Math.round(distance + 15) * minimapscale}px`;
+        fogdistance.width = `${800 - (Math.round(distance + 15) * minimapscale)}px`;
         minimapfogdistance = distance;
     }
 }
@@ -140,12 +140,12 @@ function showDistance(distance, height) {
 
 /* ==== Generation ========================================================= */
 
-function cw_generationZero() {
+function cwGenerationZero() {
     generationState = manageRound.generationZero(generationConfig());
 }
 
 function resetCarUI() {
-    cw_deadCars = 0;
+    cwDeadCars = 0;
     leaderPosition = {
         x: 0, y: 0,
     };
@@ -161,53 +161,35 @@ function resetCarUI() {
 
 /* ==== Drawing ============================================================ */
 
-function cw_drawScreen() {
-    const floorTiles = currentRunner.scene.floorTiles;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.save();
-    cw_setCameraPosition();
-    const camera_x = camera.pos.x;
-    const camera_y = camera.pos.y;
-    const zoom = camera.zoom;
-    ctx.translate(200 - (camera_x * zoom), 200 + (camera_y * zoom));
-    ctx.scale(zoom, -zoom);
-    cw_drawFloor(ctx, camera, floorTiles);
-    ghost_draw_frame(ctx, ghost, camera);
-    cw_drawCars();
-    ctx.restore();
+function cwMinimapCamera(/* x, y */) {
+    minimapcamera.left = `${Math.round((2 + camera.pos.x) * minimapscale)}px`;
+    minimapcamera.top = `${Math.round((31 - camera.pos.y) * minimapscale)}px`;
 }
 
-function cw_minimapCamera(/* x, y */) {
-    const camera_x = camera.pos.x;
-    const camera_y = camera.pos.y;
-    minimapcamera.left = `${Math.round((2 + camera_x) * minimapscale)}px`;
-    minimapcamera.top = `${Math.round((31 - camera_y) * minimapscale)}px`;
-}
-
-function cw_setCameraTarget(k) {
+function cwSetCameraTarget(k) {
     camera.target = k;
 }
 
-function cw_setCameraPosition() {
+function cwSetCameraPosition() {
     let cameraTargetPosition;
     if (camera.target !== -1) {
         cameraTargetPosition = carMap.get(camera.target).getPosition();
     } else {
         cameraTargetPosition = leaderPosition;
     }
-    const diff_y = camera.pos.y - cameraTargetPosition.y;
-    const diff_x = camera.pos.x - cameraTargetPosition.x;
-    camera.pos.y -= camera.speed * diff_y;
-    camera.pos.x -= camera.speed * diff_x;
-    cw_minimapCamera(camera.pos.x, camera.pos.y);
+    const diffY = camera.pos.y - cameraTargetPosition.y;
+    const diffX = camera.pos.x - cameraTargetPosition.x;
+    camera.pos.y -= camera.speed * diffY;
+    camera.pos.x -= camera.speed * diffX;
+    cwMinimapCamera(camera.pos.x, camera.pos.y);
 }
 
-function cw_drawGhostReplay() {
+function cwDrawGhostReplay() {
     const floorTiles = currentRunner.scene.floorTiles;
-    const carPosition = ghost_get_position(ghost);
+    const carPosition = ghostGetPosition(ghost);
     camera.pos.x = carPosition.x;
     camera.pos.y = carPosition.y;
-    cw_minimapCamera(camera.pos.x, camera.pos.y);
+    cwMinimapCamera(camera.pos.x, camera.pos.y);
     showDistance(
         Math.round(carPosition.x * 100) / 100,
         Math.round(carPosition.y * 100) / 100
@@ -219,29 +201,42 @@ function cw_drawGhostReplay() {
         200 + (carPosition.y * camera.zoom)
     );
     ctx.scale(camera.zoom, -camera.zoom);
-    ghost_draw_frame(ctx, ghost);
-    ghost_move_frame(ghost);
-    cw_drawFloor(ctx, camera, floorTiles);
+    ghostDrawFrame(ctx, ghost);
+    ghostMoveFrame(ghost);
+    cwDrawFloor(ctx, camera, floorTiles);
     ctx.restore();
 }
 
 
-function cw_drawCars() {
-    const cw_carArray = Array.from(carMap.values());
-    for (let k = (cw_carArray.length - 1); k >= 0; k--) {
-        const myCar = cw_carArray[k];
+function cwDrawCars() {
+    const cwCarArray = Array.from(carMap.values());
+    for (let k = (cwCarArray.length - 1); k >= 0; k--) {
+        const myCar = cwCarArray[k];
         drawCar(carConstants, myCar, camera, ctx);
     }
 }
 
+function cwDrawScreen() {
+    const floorTiles = currentRunner.scene.floorTiles;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.save();
+    cwSetCameraPosition();
+    ctx.translate(200 - (camera.pos.x * camera.zoom), 200 + (camera.pos.y * camera.zoom));
+    ctx.scale(camera.zoom, -camera.zoom);
+    cwDrawFloor(ctx, camera, floorTiles);
+    ghostDrawFrame(ctx, ghost, camera);
+    cwDrawCars();
+    ctx.restore();
+}
+
 function toggleDisplay() {
-    if (cw_paused) {
+    if (cwPaused) {
         return;
     }
     if (doDraw) {
         doDraw = false;
-        cw_stopSimulation();
-        cw_runningInterval = setInterval(() => {
+        cwStopSimulation();
+        cwRunningInterval = setInterval(() => {
             const time = performance.now() + (1000 / screenfps);
             while (time > performance.now()) {
                 simulationStep();
@@ -249,12 +244,12 @@ function toggleDisplay() {
         }, 1);
     } else {
         doDraw = true;
-        clearInterval(cw_runningInterval);
-        cw_startSimulation();
+        clearInterval(cwRunningInterval);
+        cwStartSimulation();
     }
 }
 
-function cw_drawMiniMap() {
+function cwDrawMiniMap() {
     const floorTiles = currentRunner.scene.floorTiles;
     let last_tile = null;
     let tile_position = new b2Vec2(-5, 0);
@@ -276,7 +271,7 @@ function cw_drawMiniMap() {
 /* ========================================================================= */
 const uiListeners = {
     preCarStep() {
-        ghost_move_frame(ghost);
+        ghostMoveFrame(ghost);
     },
     carStep(car) {
         updateCarUI(car);
@@ -290,26 +285,26 @@ const uiListeners = {
 
         // refocus camera to leader on death
         if (camera.target === carInfo) {
-            cw_setCameraTarget(-1);
+            cwSetCameraTarget(-1);
         }
         // console.log(score);
         carMap.delete(carInfo);
-        ghost_compare_to_replay(car.replay, ghost, score.v);
+        ghostCompareToReplay(car.replay, ghost, score.v);
         score.i = generationState.counter;
 
-        cw_deadCars++;
+        cwDeadCars++;
         const generationSize = generationConfig.constants.generationSize;
-        document.getElementById('population').innerHTML = (generationSize - cw_deadCars).toString();
+        document.getElementById('population').innerHTML = (generationSize - cwDeadCars).toString();
 
         // console.log(leaderPosition.leader, k)
         if (leaderPosition.leader === k) {
             // leader is dead, find new leader
-            cw_findLeader();
+            cwFindLeader();
         }
     },
     generationEnd(results) {
         cleanupRound(results);
-        return cw_newRound(results);
+        return cwNewRound(results);
     },
 };
 
@@ -326,7 +321,7 @@ function updateCarUI(carInfo) {
     const car = carMap.get(carInfo);
     const position = car.getPosition();
 
-    ghost_add_replay_frame(car.replay, car.car.car);
+    ghostAddReplayFrame(car.replay, car.car.car);
     car.minimapmarker.style.left = `${Math.round((position.x + 5) * minimapscale)}px`;
     car.healthBar.width = `${Math.round((car.car.state.health / maxCarHealth) * 100)}%`;
     if (position.x > leaderPosition.x) {
@@ -336,14 +331,14 @@ function updateCarUI(carInfo) {
     }
 }
 
-function cw_findLeader() {
+function cwFindLeader() {
     const lead = 0;
-    const cw_carArray = Array.from(carMap.values());
-    for (let k = 0; k < cw_carArray.length; k++) {
-        if (!cw_carArray[k].alive) {
+    const cwCarArray = Array.from(carMap.values());
+    for (let k = 0; k < cwCarArray.length; k++) {
+        if (!cwCarArray[k].alive) {
             continue;
         }
-        const position = cw_carArray[k].getPosition();
+        const position = cwCarArray[k].getPosition();
         if (position.x > lead) {
             leaderPosition = position;
             leaderPosition.leader = k;
@@ -374,9 +369,10 @@ function cleanupRound(results) {
     );
 }
 
-function cw_newRound(results) {
-    camera.pos.x = camera.pos.y = 0;
-    cw_setCameraTarget(-1);
+function cwNewRound(results) {
+    camera.pos.x = 0;
+    camera.pos.y = 0;
+    cwSetCameraTarget(-1);
 
     generationState = manageRound.nextGeneration(generationState, results, generationConfig());
     if (worldDef.mutableFloor) {
@@ -385,56 +381,56 @@ function cw_newRound(results) {
         worldDef.floorseed = btoa(Math.seedrandom());
     } else {
         // RE-ENABLE GHOST
-        ghost_reset_ghost(ghost);
+        ghostResetGhost(ghost);
     }
     currentRunner = worldRun(worldDef, generationState.generation, uiListeners);
     setupCarUI();
-    cw_drawMiniMap();
+    cwDrawMiniMap();
     resetCarUI();
 }
 
-function cw_startSimulation() {
-    cw_runningInterval = setInterval(simulationStep, Math.round(1000 / box2dfps));
-    cw_drawInterval = setInterval(cw_drawScreen, Math.round(1000 / screenfps));
+function cwStartSimulation() {
+    cwRunningInterval = setInterval(simulationStep, Math.round(1000 / box2dfps));
+    cwDrawInterval = setInterval(cwDrawScreen, Math.round(1000 / screenfps));
 }
 
-function cw_stopSimulation() {
-    clearInterval(cw_runningInterval);
-    clearInterval(cw_drawInterval);
+function cwStopSimulation() {
+    clearInterval(cwRunningInterval);
+    clearInterval(cwDrawInterval);
 }
 
-function cw_resetPopulationUI() {
+function cwResetPopulationUI() {
     document.getElementById('generation').innerHTML = '';
     document.getElementById('cars').innerHTML = '';
     document.getElementById('topscores').innerHTML = '';
-    cw_clearGraphics();
+    cwClearGraphics();
     resetGraphState();
 }
 
-function cw_resetWorld() {
+function cwResetWorld() {
     doDraw = true;
-    cw_stopSimulation();
+    cwStopSimulation();
     worldDef.floorseed = document.getElementById('newseed').value;
-    cw_resetPopulationUI();
+    cwResetPopulationUI();
 
     Math.seedrandom();
-    cw_generationZero();
+    cwGenerationZero();
     currentRunner = worldRun(worldDef, generationState.generation, uiListeners);
 
-    ghost = ghost_create_ghost();
+    ghost = ghostCreateGhost();
     resetCarUI();
     setupCarUI();
-    cw_drawMiniMap();
+    cwDrawMiniMap();
 
-    cw_startSimulation();
+    cwStartSimulation();
 }
 
 function setupCarUI() {
     currentRunner.cars.map((carInfo) => {
-        const car = new cw_Car(carInfo, carMap);
+        const car = new cwCar(carInfo, carMap);
         carMap.set(carInfo, car);
-        car.replay = ghost_create_replay();
-        ghost_add_replay_frame(car.replay, car.car.car);
+        car.replay = ghostCreateReplay();
+        ghostAddReplayFrame(car.replay, car.car.car);
     });
 }
 
@@ -456,9 +452,9 @@ document.querySelector('#toggle-display').addEventListener('click', () => {
 });
 
 document.querySelector('#new-population').addEventListener('click', () => {
-    cw_resetPopulationUI();
-    cw_generationZero();
-    ghost = ghost_create_ghost();
+    cwResetPopulationUI();
+    cwGenerationZero();
+    ghost = ghostCreateGhost();
     resetCarUI();
 });
 
@@ -475,7 +471,7 @@ function restoreProgress() {
         alert('No saved progress found');
         return;
     }
-    cw_stopSimulation();
+    cwStopSimulation();
     generationState.generation = JSON.parse(localStorage.cw_savedGeneration);
     generationState.counter = localStorage.cw_genCounter;
     ghost = JSON.parse(localStorage.cw_ghost);
@@ -484,11 +480,11 @@ function restoreProgress() {
     document.getElementById('newseed').value = worldDef.floorseed;
 
     currentRunner = worldRun(worldDef, generationState.generation, uiListeners);
-    cw_drawMiniMap();
+    cwDrawMiniMap();
     Math.seedrandom();
 
     resetCarUI();
-    cw_startSimulation();
+    cwStartSimulation();
 }
 
 document.querySelector('#confirm-reset').addEventListener('click', () => {
@@ -497,7 +493,7 @@ document.querySelector('#confirm-reset').addEventListener('click', () => {
 
 function cw_confirmResetWorld() {
     if (confirm('Really reset world?')) {
-        cw_resetWorld();
+        cwResetWorld();
     } else {
         return false;
     }
@@ -507,17 +503,17 @@ function cw_confirmResetWorld() {
 
 
 function cw_pauseSimulation() {
-    cw_paused = true;
-    clearInterval(cw_runningInterval);
-    clearInterval(cw_drawInterval);
-    ghost_pause(ghost);
+    cwPaused = true;
+    clearInterval(cwRunningInterval);
+    clearInterval(cwDrawInterval);
+    ghostPause(ghost);
 }
 
 function cw_resumeSimulation() {
-    cw_paused = false;
-    ghost_resume(ghost);
-    cw_runningInterval = setInterval(simulationStep, Math.round(1000 / box2dfps));
-    cw_drawInterval = setInterval(cw_drawScreen, Math.round(1000 / screenfps));
+    cwPaused = false;
+    ghostResume(ghost);
+    cwRunningInterval = setInterval(simulationStep, Math.round(1000 / box2dfps));
+    cwDrawInterval = setInterval(cwDrawScreen, Math.round(1000 / screenfps));
 }
 
 function cw_startGhostReplay() {
@@ -525,13 +521,13 @@ function cw_startGhostReplay() {
         toggleDisplay();
     }
     cw_pauseSimulation();
-    cwGhostReplayInterval = setInterval(cw_drawGhostReplay, Math.round(1000 / screenfps));
+    cwGhostReplayInterval = setInterval(cwDrawGhostReplay, Math.round(1000 / screenfps));
 }
 
 function cw_stopGhostReplay() {
     clearInterval(cwGhostReplayInterval);
     cwGhostReplayInterval = null;
-    cw_findLeader();
+    cwFindLeader();
     camera.pos.x = leaderPosition.x;
     camera.pos.y = leaderPosition.y;
     cw_resumeSimulation();
@@ -554,36 +550,37 @@ function cw_toggleGhostReplay(button) {
 // ghost replay stuff END
 
 // initial stuff, only called once (hopefully)
-function cw_init() {
+function cwInit() {
     // clone silver dot and health bar
-    const mmm = document.getElementsByName('minimapmarker')[0];
-    const hbar = document.getElementsByName('healthbar')[0];
+    const minimapMarker = document.getElementsByName('minimapmarker')[0];
+    const healthBar = document.getElementsByName('healthbar')[0];
     const generationSize = generationConfig.constants.generationSize;
 
     for (let k = 0; k < generationSize; k++) {
         // minimap markers
-        const newbar = mmm.cloneNode(true);
-        newbar.id = `bar${k}`;
-        newbar.style.paddingTop = `${k * 9}px`;
-        minimapholder.appendChild(newbar);
+        const newBar = minimapMarker.cloneNode(true);
+        newBar.id = `bar${k}`;
+        newBar.style.paddingTop = `${k * 9}px`;
+        minimapholder.appendChild(newBar);
 
         // health bars
-        const newhealth = hbar.cloneNode(true);
-        newhealth.getElementsByTagName('DIV')[0].id = `health${k}`;
-        newhealth.car_index = k;
-        document.getElementById('health').appendChild(newhealth);
+        const newHealth = healthBar.cloneNode(true);
+        newHealth.getElementsByTagName('DIV')[0].id = `health${k}`;
+        newHealth.car_index = k;
+        document.getElementById('health').appendChild(newHealth);
     }
-    mmm.parentNode.removeChild(mmm);
-    hbar.parentNode.removeChild(hbar);
+    minimapMarker.parentNode.removeChild(minimapMarker);
+    healthBar.parentNode.removeChild(healthBar);
     worldDef.floorseed = btoa(Math.seedrandom());
-    cw_generationZero();
-    ghost = ghost_create_ghost();
+    cwGenerationZero();
+    ghost = ghostCreateGhost();
+    debugger;
     resetCarUI();
     currentRunner = worldRun(worldDef, generationState.generation, uiListeners);
     setupCarUI();
-    cw_drawMiniMap();
-    cw_runningInterval = setInterval(simulationStep, Math.round(1000 / box2dfps));
-    cw_drawInterval = setInterval(cw_drawScreen, Math.round(1000 / screenfps));
+    cwDrawMiniMap();
+    cwRunningInterval = setInterval(simulationStep, Math.round(1000 / box2dfps));
+    cwDrawInterval = setInterval(cwDrawScreen, Math.round(1000 / screenfps));
 }
 
 function relMouseCoords(event) {
@@ -629,9 +626,9 @@ minimapholder.onclick = function (event) {
     }
 
     if (closest.x === maxX) { // focus on leader again
-        cw_setCameraTarget(-1);
+        cwSetCameraTarget(-1);
     } else {
-        cw_setCameraTarget(closest.value);
+        cwSetCameraTarget(closest.value);
     }
 };
 
@@ -648,17 +645,17 @@ document.querySelector('#mutationsize').addEventListener('change', (e) => {
 
 document.querySelector('#floor').addEventListener('change', (e) => {
     const elem = e.target;
-    cw_setMutableFloor(elem.options[elem.selectedIndex].value);
+    cwSetMutableFloor(elem.options[elem.selectedIndex].value);
 });
 
 document.querySelector('#gravity').addEventListener('change', (e) => {
     const elem = e.target;
-    cw_setGravity(elem.options[elem.selectedIndex].value);
+    cwSetGravity(elem.options[elem.selectedIndex].value);
 });
 
 document.querySelector('#elitesize').addEventListener('change', (e) => {
     const elem = e.target;
-    cw_setEliteSize(elem.options[elem.selectedIndex].value);
+    cwSetEliteSize(elem.options[elem.selectedIndex].value);
 });
 
 function cw_setMutation(mutation) {
@@ -669,11 +666,11 @@ function cw_setMutationRange(range) {
     generationConfig.constants.mutation_range = parseFloat(range);
 }
 
-function cw_setMutableFloor(choice) {
+function cwSetMutableFloor(choice) {
     worldDef.mutableFloor = (choice === 1);
 }
 
-function cw_setGravity(choice) {
+function cwSetGravity(choice) {
     worldDef.gravity = new b2Vec2(0.0, -parseFloat(choice));
     const world = currentRunner.scene.world;
     // CHECK GRAVITY CHANGES
@@ -682,8 +679,8 @@ function cw_setGravity(choice) {
     }
 }
 
-function cw_setEliteSize(clones) {
+function cwSetEliteSize(clones) {
     generationConfig.constants.championLength = parseInt(clones, 10);
 }
 
-cw_init();
+cwInit();

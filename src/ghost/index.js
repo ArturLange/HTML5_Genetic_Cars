@@ -13,13 +13,26 @@ function ghostCreateReplay() {
 }
 
 function ghostCreateGhost() {
-    if (!enableGhost) { return null; }
+    if (!enableGhost) {
+        return null;
+    }
 
     return {
         replay: null,
         frame: 0,
         dist: -100,
     };
+}
+
+function ghostDrawCircle(ctx, center, radius, angle) {
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI, true);
+
+    ctx.moveTo(center.x, center.y);
+    ctx.lineTo(center.x + (radius * Math.cos(angle)), center.y + (radius * Math.sin(angle)));
+
+    ctx.fill();
+    ctx.stroke();
 }
 
 function ghostResetGhost(ghost) {
@@ -63,7 +76,9 @@ function ghostMoveFrame(ghost) {
     if (ghost === null) { return; }
     if (ghost.replay === null) { return; }
     ghost.frame++;
-    if (ghost.frame >= ghost.replay.num_frames) { ghost.frame = ghost.replay.num_frames - 1; }
+    if (ghost.frame >= ghost.replay.num_frames) {
+        ghost.frame = ghost.replay.num_frames - 1;
+    }
 }
 
 function ghostAddReplayFrame(replay, car) {
@@ -84,18 +99,17 @@ function ghostDrawPoly(ctx, vtx, nVtx) {
 }
 
 function ghostDrawFrame(ctx, ghost, camera) {
-    const zoom = camera.zoom;
     if (!enableGhost) { return; }
     if (ghost === null) { return; }
     if (ghost.frame < 0) { return; }
     if (ghost.replay === null) { return; }
-
+    debugger;
     const frame = ghost.replay.frames[ghost.frame];
 
     // wheel style
     ctx.fillStyle = '#eee';
     ctx.strokeStyle = '#aaa';
-    ctx.lineWidth = 1 / zoom;
+    ctx.lineWidth = 1 / camera.zoom;
 
     for (let i = 0; i < frame.wheels.length; i++) {
         for (const w in frame.wheels[i]) {
@@ -106,22 +120,11 @@ function ghostDrawFrame(ctx, ghost, camera) {
     // chassis style
     ctx.strokeStyle = '#aaa';
     ctx.fillStyle = '#eee';
-    ctx.lineWidth = 1 / zoom;
+    ctx.lineWidth = 1 / camera.zoom;
     ctx.beginPath();
     for (const c in frame.chassis) {
         ghostDrawPoly(ctx, frame.chassis[c].vtx, frame.chassis[c].num);
     }
-    ctx.fill();
-    ctx.stroke();
-}
-
-function ghostDrawCircle(ctx, center, radius, angle) {
-    ctx.beginPath();
-    ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI, true);
-
-    ctx.moveTo(center.x, center.y);
-    ctx.lineTo(center.x + (radius * Math.cos(angle)), center.y + (radius * Math.sin(angle)));
-
     ctx.fill();
     ctx.stroke();
 }

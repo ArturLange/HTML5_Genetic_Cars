@@ -1,10 +1,10 @@
-module.exports.svg = function (container, frame) {
+module.exports.svg = function svg(container, frame) {
     return `
     <svg viewBox="${[
-        Math.round(frame.pos.x * 10) / 10 - 2,
-        Math.round(frame.pos.y * 10) / 10 - 2,
-        Math.round(frame.pos.x * 10) / 10 + 2,
-        Math.round(frame.pos.y * 10) / 10 + 2,
+        (Math.round(frame.pos.x * 10) / 10) - 2,
+        (Math.round(frame.pos.y * 10) / 10) - 2,
+        (Math.round(frame.pos.x * 10) / 10) + 2,
+        (Math.round(frame.pos.y * 10) / 10) + 2,
     ]} ">
       ${renderWheels(frame.wheels)}
       ${renderChassis(frame.chassis)}
@@ -15,9 +15,9 @@ module.exports.svg = function (container, frame) {
         return wheels.map(wheelList => wheelList.map((wheel) => {
             const fillStyle = '#eee';
             const strokeStyle = '#aaa';
-            const center = wheel.pos,
-                radius = wheel.rad,
-                angle = wheel.ang;
+            const center = wheel.pos;
+            const radius = wheel.rad;
+            const angle = wheel.ang;
             return `
           <circle
             cx="${center.x}"
@@ -46,8 +46,8 @@ module.exports.svg = function (container, frame) {
         return chassis.map(polyList => `
         <polygon
           points="${
-    polyList.vtx.map(pos => `${pos.x},${pos.y}`).join(' ')
-}"
+            polyList.vtx.map(pos => `${pos.x},${pos.y}`).join(' ')
+            }"
           stroke-width="1"
           stroke="${strokeStyle}"
           fill="${fillStyle}"
@@ -65,7 +65,7 @@ module.exports = function (ctx, zoom, frame) {
 
     for (let i = 0; i < frame.wheels.length; i++) {
         for (const w in frame.wheels[i]) {
-            ghost_draw_circle(ctx, frame.wheels[i][w].pos, frame.wheels[i][w].rad, frame.wheels[i][w].ang);
+            ghostDrawCircle(ctx, frame.wheels[i][w].pos, frame.wheels[i][w].rad, frame.wheels[i][w].ang);
         }
     }
 
@@ -74,26 +74,31 @@ module.exports = function (ctx, zoom, frame) {
     ctx.fillStyle = '#eee';
     ctx.lineWidth = 1 / zoom;
     ctx.beginPath();
-    for (const c in frame.chassis) { ghost_draw_poly(ctx, frame.chassis[c].vtx, frame.chassis[c].num); }
+    for (const c in frame.chassis) {
+        ghostDrawPoly(ctx, frame.chassis[c].vtx, frame.chassis[c].num);
+    }
     ctx.fill();
     ctx.stroke();
 };
 
 
-function ghost_draw_poly(ctx, vtx, n_vtx) {
+function ghostDrawPoly(ctx, vtx, nVtx) {
     ctx.moveTo(vtx[0].x, vtx[0].y);
-    for (let i = 1; i < n_vtx; i++) {
+    for (let i = 1; i < nVtx; i++) {
         ctx.lineTo(vtx[i].x, vtx[i].y);
     }
     ctx.lineTo(vtx[0].x, vtx[0].y);
 }
 
-function ghost_draw_circle(ctx, center, radius, angle) {
+function ghostDrawCircle(ctx, center, radius, angle) {
     ctx.beginPath();
     ctx.arc(center.x, center.y, radius, 0, 2 * Math.PI, true);
 
     ctx.moveTo(center.x, center.y);
-    ctx.lineTo(center.x + radius * Math.cos(angle), center.y + radius * Math.sin(angle));
+    ctx.lineTo(
+        center.x + (radius * Math.cos(angle)),
+        center.y + (radius * Math.sin(angle))
+    );
 
     ctx.fill();
     ctx.stroke();

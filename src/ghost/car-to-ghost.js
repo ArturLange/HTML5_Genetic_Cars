@@ -1,42 +1,42 @@
-function ghostGetChassis(c) {
-    const gc = [];
+function ghostGetChassis(chassis) {
+    const ghostChassis = [];
 
-    for (let f = c.GetFixtureList(); f; f = f.m_next) {
-        const s = f.GetShape();
+    for (let f = chassis.GetFixtureList(); f; f = f.m_next) {
+        const shape = f.GetShape();
 
         const p = {
             vtx: [],
             num: 0,
         };
 
-        p.num = s.m_vertexCount;
+        p.num = shape.m_vertexCount;
 
-        for (let i = 0; i < s.m_vertexCount; i++) {
-            p.vtx.push(c.GetWorldPoint(s.m_vertices[i]));
+        for (let i = 0; i < shape.m_vertexCount; i++) {
+            p.vtx.push(chassis.GetWorldPoint(shape.m_vertices[i]));
         }
 
-        gc.push(p);
+        ghostChassis.push(p);
     }
 
-    return gc;
+    return ghostChassis;
 }
 
-function ghostGetWheel(w) {
-    const gw = [];
+function ghostGetWheel(wheel) {
+    const ghostWheels = [];
 
-    for (let f = w.GetFixtureList(); f; f = f.m_next) {
-        const s = f.GetShape();
+    for (let f = wheel.GetFixtureList(); f; f = f.m_next) {
+        const shape = f.GetShape();
 
         const c = {
-            pos: w.GetWorldPoint(s.m_p),
-            rad: s.m_radius,
-            ang: w.m_sweep.a,
+            pos: wheel.GetWorldPoint(shape.m_p),
+            rad: shape.m_radius,
+            ang: wheel.m_sweep.a,
         };
 
-        gw.push(c);
+        ghostWheels.push(c);
     }
 
-    return gw;
+    return ghostWheels;
 }
 
 
@@ -44,7 +44,10 @@ module.exports = function (car) {
     const out = {
         chassis: ghostGetChassis(car.chassis),
         wheels: [],
-        pos: { x: car.chassis.GetPosition().x, y: car.chassis.GetPosition().y },
+        pos: {
+            x: car.chassis.GetPosition().x,
+            y: car.chassis.GetPosition().y
+        },
     };
 
     for (let i = 0; i < car.wheels.length; i++) {

@@ -38,12 +38,11 @@ function runDefs(worldDef, defs, listeners) {
                 car.score = carRun.calculateScore(car.state, worldDef);
                 listeners.carDeath(car);
 
-                const world = scene.world;
                 const worldCar = car.car;
-                world.DestroyBody(worldCar.chassis);
+                scene.world.DestroyBody(worldCar.chassis);
 
                 for (let w = 0; w < worldCar.wheels.length; w++) {
-                    world.DestroyBody(worldCar.wheels[w]);
+                    scene.world.DestroyBody(worldCar.wheels[w]);
                 }
 
                 return false;

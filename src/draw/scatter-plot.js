@@ -2,7 +2,6 @@
 
 // Called when the Visualization API is loaded.
 
-module.exports = highCharts;
 function highCharts(elem, scores) {
     let keys = Object.keys(scores[0].def);
     keys = keys.reduce((curArray, key) => {
@@ -156,3 +155,5 @@ function visChart(elem, scores, propertyMap, graph) {
     if (camera) graph.setCameraPosition(camera); // restore camera position
     return graph;
 }
+
+module.exports = highCharts;
