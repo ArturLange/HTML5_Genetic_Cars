@@ -7,19 +7,26 @@ interface WorldDefinition {
     motorSpeed: number;
     box2dfps: number;
     max_car_health: number;
-    tileDimensions: any;
+    tileDimensions: TileDimensions;
+}
+
+interface TileDimensions {
+    width: number;
+    height: number;
 }
 
 export function worldDef(): WorldDefinition {
-    var box2dfps = 60;
+    const box2dfps = 60;
     return {
-        gravity: {y: 0},
+        box2dfps,
+        gravity: {
+            y: 0,
+        },
         doSleep: true,
         floorseed: 'abc',
         maxFloorTiles: 200,
         mutable_floor: false,
         motorSpeed: 20,
-        box2dfps: box2dfps,
         max_car_health: box2dfps * 10,
         tileDimensions: {
             width: 1.5,

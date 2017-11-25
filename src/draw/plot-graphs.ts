@@ -7,9 +7,7 @@ export function plotGraphs(graphElem, topScoresElem, scatterPlotElem, lastState,
     var graphctx = graphcanvas.getContext('2d');
     var graphwidth = 400;
     var graphheight = 250;
-    var nextState = cwStoreGraphScores(
-        lastState, scores, generationSize,
-    );
+    var nextState = cwStoreGraphScores(lastState, scores, generationSize);
     console.log(scores, nextState);
     cwClearGraphics(graphcanvas, graphctx, graphwidth, graphheight);
     cwPlotAverage(nextState, graphctx);

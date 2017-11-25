@@ -1,11 +1,11 @@
 import { pickParent } from './pickParent';
 
-var carConstruct = require("../car-schema/construct");
+var carConstruct = require('../car-schema/construct');
 
 var carConstants = carConstruct.carConstants();
 
 var schema = carConstruct.generateSchema(carConstants);
-var selectFromAllParents = require("./selectFromAllParents");
+var selectFromAllParents = require('./selectFromAllParents');
 const constants = {
   generationSize: 20,
   schema: schema,
@@ -19,10 +19,10 @@ module.exports = function(){
     {},
     constants,
     {
-      selectFromAllParents: selectFromAllParents,
-      generateRandom: require("./generateRandom"),
+      selectFromAllParents,
+      generateRandom: require('./generateRandom'),
       pickParent: pickParent.bind(void 0, currentChoices),
-    }
+    },
   );
 };
 module.exports.constants = constants;
