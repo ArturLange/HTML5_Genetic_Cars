@@ -20,17 +20,17 @@ function createChassisPart(body, vertex1, vertex2, density) {
     body.CreateFixture(fix_def);
 }
 
-function createChassis(world, vertexs, density) {
+function createChassis(world, vertices, density) {
 
-    var vertex_list = new Array();
-    vertex_list.push(new b2Vec2(vertexs[0], 0));
-    vertex_list.push(new b2Vec2(vertexs[1], vertexs[2]));
-    vertex_list.push(new b2Vec2(0, vertexs[3]));
-    vertex_list.push(new b2Vec2(-vertexs[4], vertexs[5]));
-    vertex_list.push(new b2Vec2(-vertexs[6], 0));
-    vertex_list.push(new b2Vec2(-vertexs[7], -vertexs[8]));
-    vertex_list.push(new b2Vec2(0, -vertexs[9]));
-    vertex_list.push(new b2Vec2(vertexs[10], -vertexs[11]));
+    var vertex_list = [];
+    vertex_list.push(new b2Vec2(vertices[0], 0));
+    vertex_list.push(new b2Vec2(vertices[1], vertices[2]));
+    vertex_list.push(new b2Vec2(0, vertices[3]));
+    vertex_list.push(new b2Vec2(-vertices[4], vertices[5]));
+    vertex_list.push(new b2Vec2(-vertices[6], 0));
+    vertex_list.push(new b2Vec2(-vertices[7], -vertices[8]));
+    vertex_list.push(new b2Vec2(0, -vertices[9]));
+    vertex_list.push(new b2Vec2(vertices[10], -vertices[11]));
 
     var body_def = new b2BodyDef();
     body_def.type = b2Body.b2_dynamicBody;

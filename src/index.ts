@@ -4,8 +4,6 @@
 
 import carConstruct = require("./car-schema/construct");
 
-import manageRound = require("./machine-learning/genetic-algorithm/manage-round");
-
 import ghost_fns = require("./ghost/index");
 
 import drawCar = require("./draw/draw-car");
@@ -14,6 +12,7 @@ var plot_graphs = graph_fns.plotGraphs;
 var cw_clearGraphics = graph_fns.clearGraphics;
 import { runDefs } from './world/run';
 import { drawFloor } from './draw/draw-floor';
+import { generationZero, nextGeneration } from './machine-learning/genetic-algorithm/manage-round';
 
 var ghost_draw_frame = ghost_fns.ghost_draw_frame;
 var ghost_create_ghost = ghost_fns.ghost_create_ghost;
@@ -141,7 +140,7 @@ function showDistance(distance, height) {
 
 function cw_generationZero() {
 
-  generationState = manageRound.generationZero(generationConfig());
+  generationState = generationZero(generationConfig());
 }
 
 function resetCarUI(){
@@ -381,7 +380,7 @@ function cw_newRound(results) {
   camera.pos.x = camera.pos.y = 0;
   cw_setCameraTarget(-1);
 
-  generationState = manageRound.nextGeneration(
+  generationState = nextGeneration(
     generationState, results, generationConfig()
   );
   if (world_def.mutable_floor) {

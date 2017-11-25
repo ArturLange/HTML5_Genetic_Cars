@@ -1,7 +1,6 @@
 // http://sunmingtao.blogspot.com/2016/11/inbreeding-coefficient.html
-module.exports = getInbreedingCoefficient;
 
-function getInbreedingCoefficient(child){
+export function getInbreedingCoefficient(child){
   var nameIndex = new Map();
   var flagged = new Set();
   var convergencePoints = new Set();

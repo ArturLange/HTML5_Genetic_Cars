@@ -1,9 +1,10 @@
+import { pickParent } from './pickParent';
+
 var carConstruct = require("../car-schema/construct");
 
 var carConstants = carConstruct.carConstants();
 
 var schema = carConstruct.generateSchema(carConstants);
-var pickParent = require("./pickParent");
 var selectFromAllParents = require("./selectFromAllParents");
 const constants = {
   generationSize: 20,
@@ -23,5 +24,5 @@ module.exports = function(){
       pickParent: pickParent.bind(void 0, currentChoices),
     }
   );
-}
-module.exports.constants = constants
+};
+module.exports.constants = constants;

@@ -1,11 +1,6 @@
 var create = require("../create-instance");
 
-module.exports = {
-  generationZero: generationZero,
-  nextGeneration: nextGeneration
-}
-
-function generationZero(config){
+export function generationZero(config){
   var generationSize = config.generationSize,
   schema = config.schema;
   var cw_carGeneration = [];
@@ -22,7 +17,7 @@ function generationZero(config){
   };
 }
 
-function nextGeneration(
+export function nextGeneration(
   previousState,
   scores,
   config

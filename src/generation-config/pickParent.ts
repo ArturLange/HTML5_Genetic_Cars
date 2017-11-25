@@ -1,7 +1,6 @@
 var nAttributes = 15;
-module.exports = pickParent;
 
-function pickParent(currentChoices, chooseId, key /* , parents */){
+export function pickParent(currentChoices, chooseId, key /* , parents */){
   if(!currentChoices.has(chooseId)){
     currentChoices.set(chooseId, initializePick())
   }
