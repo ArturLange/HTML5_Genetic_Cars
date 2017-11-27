@@ -11,18 +11,18 @@ export function createGenerationZero(schema, generator) {
 
 export function createCrossBreed(schema, parents, parentChooser) {
     var id = Math.random().toString(32);
-    return Object.keys(schema).reduce(function (crossDef, key) {
+    return Object.keys(schema).reduce((crossDef, key) => {
         var schemaDef = schema[key];
         var values = [];
-        for (var i = 0, l = schemaDef.length; i < l; i++) {
+        for (let i = 0, l = schemaDef.length; i < l; i += 1) {
             var p = parentChooser(id, key, parents);
             values.push(parents[p][key][i]);
         }
         crossDef[key] = values;
         return crossDef;
     }, {
-        id: id,
-        ancestry: parents.map(function (parent) {
+        id,
+        ancestry: parents.map((parent) => {
             return {
                 id: parent.id,
                 ancestry: parent.ancestry,
@@ -47,7 +47,7 @@ export function createMutatedClone(schema, generator, parent, factor, chanceToMu
 }
 
 export function applyTypes(schema, parent) {
-    return Object.keys(schema).reduce(function (clone, key) {
+    return Object.keys(schema).reduce((clone, key) => {
         var schemaProp = schema[key];
         var originalValues = parent[key];
         var values;

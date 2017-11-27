@@ -1,4 +1,3 @@
-/* globals btoa */
 import setupScene = require('./setup-scene');
 import carRun = require('../car-schema/run');
 import { defToCar } from '../car-schema/def-to-car';
@@ -14,8 +13,8 @@ export function runDefs(world_def, defs, listeners) {
     console.log('about to build cars');
     var cars = defs.map((def, i) => {
         return {
+            def,
             index: i,
-            def: def,
             car: defToCar(def, scene.world, world_def),
             state: carRun.getInitialState(world_def),
         };

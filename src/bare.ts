@@ -1,9 +1,12 @@
 /* globals document confirm btoa */
-/* globals b2Vec2 */
+/* globals B2Vec2 */
 // Global Vars
 import { runDefs } from './world/run';
 import { plotGraphs } from './draw/plot-graphs';
 import * as generationConfig from './generation-config';
+import {
+    B2Vec2,
+} from '../lib/box2d-wrapper';
 
 // ======= WORLD STATE ======
 
@@ -44,10 +47,10 @@ var box2dfps = 60;
 var max_car_health = box2dfps * 10;
 
 var world_def = {
-    gravity: new b2Vec2(0.0, -9.81),
+    gravity: new B2Vec2(0.0, -9.81),
     doSleep: true,
     floorseed: btoa(Math.seedrandom()),
-    tileDimensions: new b2Vec2(1.5, 0.15),
+    tileDimensions: new B2Vec2(1.5, 0.15),
     maxFloorTiles: 200,
     mutable_floor: false,
     box2dfps: box2dfps,

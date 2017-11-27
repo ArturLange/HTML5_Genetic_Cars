@@ -1,84 +1,31 @@
-/*
-  globals b2RevoluteJointDef b2Vec2 b2BodyDef b2Body b2FixtureDef b2PolygonShape b2CircleShape
-*/
-
 import { applyTypes } from '../machine-learning/create-instance';
-
-function createChassisPart(body, vertex1, vertex2, density) {
-    var vertex_list = [];
-    vertex_list.push(vertex1);
-    vertex_list.push(vertex2);
-    vertex_list.push(b2Vec2.Make(0, 0));
-    var fix_def = new b2FixtureDef();
-    fix_def.shape = new b2PolygonShape();
-    fix_def.density = density;
-    fix_def.friction = 10;
-    fix_def.restitution = 0.2;
-    fix_def.filter.groupIndex = -1;
-    fix_def.shape.SetAsArray(vertex_list, 3);
-
-    body.CreateFixture(fix_def);
-}
-
-function createChassis(world, vertices, density) {
-
-    var vertex_list = [];
-    vertex_list.push(new b2Vec2(vertices[0], 0));
-    vertex_list.push(new b2Vec2(vertices[1], vertices[2]));
-    vertex_list.push(new b2Vec2(0, vertices[3]));
-    vertex_list.push(new b2Vec2(-vertices[4], vertices[5]));
-    vertex_list.push(new b2Vec2(-vertices[6], 0));
-    vertex_list.push(new b2Vec2(-vertices[7], -vertices[8]));
-    vertex_list.push(new b2Vec2(0, -vertices[9]));
-    vertex_list.push(new b2Vec2(vertices[10], -vertices[11]));
-
-    var body_def = new b2BodyDef();
-    body_def.type = b2Body.b2_dynamicBody;
-    body_def.position.Set(0.0, 4.0);
-
-    var body = world.CreateBody(body_def);
-
-    createChassisPart(body, vertex_list[0], vertex_list[1], density);
-    createChassisPart(body, vertex_list[1], vertex_list[2], density);
-    createChassisPart(body, vertex_list[2], vertex_list[3], density);
-    createChassisPart(body, vertex_list[3], vertex_list[4], density);
-    createChassisPart(body, vertex_list[4], vertex_list[5], density);
-    createChassisPart(body, vertex_list[5], vertex_list[6], density);
-    createChassisPart(body, vertex_list[6], vertex_list[7], density);
-    createChassisPart(body, vertex_list[7], vertex_list[0], density);
-
-    body.vertex_list = vertex_list;
-
-    return body;
-}
+import { createChassis, createWheel } from './parts-creation';
+import { B2RevoluteJointDef } from '../../lib/box2d-wrapper';
 
 export function defToCar(normalDef, world, constants) {
     var car_def = applyTypes(constants.schema, normalDef);
     let instance = {};
-    instance.chassis = createChassis(
-        world, car_def.vertex_list, car_def.chassis_density
-    );
-    var i;
+    instance.chassis = createChassis(world, car_def.vertex_list, car_def.chassis_density);
 
-    var wheelCount = car_def.wheel_radius.length;
+    const wheelCount = car_def.wheel_radius.length;
 
     instance.wheels = [];
-    for (i = 0; i < wheelCount; i++) {
+    for (let i = 0; i < wheelCount; i += 1) {
         instance.wheels[i] = createWheel(
             world,
             car_def.wheel_radius[i],
-            car_def.wheel_density[i]
+            car_def.wheel_density[i],
         );
     }
 
     var carMass = instance.chassis.GetMass();
-    for (i = 0; i < wheelCount; i++) {
+    for (let i = 0; i < wheelCount; i += 1) {
         carMass += instance.wheels[i].GetMass();
     }
 
-    var jointDef = new b2RevoluteJointDef();
+    var jointDef = new B2RevoluteJointDef();
 
-    for (i = 0; i < wheelCount; i++) {
+    for (let i = 0; i < wheelCount; i += 1) {
         var torque = (carMass * -constants.gravity.y) / car_def.wheel_radius[i];
 
         var randvertex = instance.chassis.vertex_list[car_def.wheel_vertex[i]];
@@ -95,20 +42,4 @@ export function defToCar(normalDef, world, constants) {
     return instance;
 }
 
-function createWheel(world, radius, density) {
-    var body_def = new b2BodyDef();
-    body_def.type = b2Body.b2_dynamicBody;
-    body_def.position.Set(0, 0);
 
-    var body = world.CreateBody(body_def);
-
-    var fix_def = new b2FixtureDef();
-    fix_def.shape = new b2CircleShape(radius);
-    fix_def.density = density;
-    fix_def.friction = 1;
-    fix_def.restitution = 0.2;
-    fix_def.filter.groupIndex = -1;
-
-    body.CreateFixture(fix_def);
-    return body;
-}

@@ -1,5 +1,5 @@
 /* globals document performance localStorage alert confirm btoa HTMLDivElement */
-/* globals b2Vec2 */
+/* globals B2Vec2 */
 // Global Vars
 
 import carConstruct = require('./car-schema/construct');
@@ -14,6 +14,9 @@ var cw_clearGraphics = graph_fns.clearGraphics;
 import { runDefs } from './world/run';
 import { drawFloor } from './draw/draw-floor';
 import { generationZero, nextGeneration } from './machine-learning/genetic-algorithm/manage-round';
+import {
+    B2Vec2,
+} from '../lib/box2d-wrapper';
 
 var ghost_draw_frame = ghost_fns.ghost_draw_frame;
 var ghost_create_ghost = ghost_fns.ghost_create_ghost;
@@ -77,10 +80,10 @@ minimapcamera.height = 6 * minimapscale + 'px';
 var generationConfig = require('./generation-config');
 
 var world_def = {
-    gravity: new b2Vec2(0.0, -9.81),
+    gravity: new B2Vec2(0.0, -9.81),
     doSleep: true,
     floorseed: btoa(Math.seedrandom()),
-    tileDimensions: new b2Vec2(1.5, 0.15),
+    tileDimensions: new B2Vec2(1.5, 0.15),
     maxFloorTiles: 200,
     mutable_floor: false,
     box2dfps: box2dfps,
@@ -249,7 +252,7 @@ function toggleDisplay() {
 function cw_drawMiniMap() {
     var floorTiles = currentRunner.scene.floorTiles;
     var last_tile = null;
-    var tile_position = new b2Vec2(-5, 0);
+    var tile_position = new B2Vec2(-5, 0);
     minimapfogdistance = 0;
     fogdistance.width = '800px';
     minimapcanvas.width = minimapcanvas.width;
@@ -672,7 +675,7 @@ function cw_setMutableFloor(choice) {
 }
 
 function cw_setGravity(choice) {
-    world_def.gravity = new b2Vec2(0.0, -parseFloat(choice));
+    world_def.gravity = new B2Vec2(0.0, -parseFloat(choice));
     var world = currentRunner.scene.world;
     // CHECK GRAVITY CHANGES
     if (world.GetGravity().y != world_def.gravity.y) {
