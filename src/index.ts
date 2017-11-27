@@ -6,7 +6,7 @@ import carConstruct = require('./car-schema/construct');
 
 import ghost_fns = require('./ghost/index');
 
-import drawCar = require('./draw/draw-car');
+import { drawCar } from './draw/draw-car';
 import graph_fns = require('./draw/plot-graphs');
 
 var plot_graphs = graph_fns.plotGraphs;
