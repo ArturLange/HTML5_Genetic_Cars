@@ -1,21 +1,22 @@
-var random = require('./random');
+import { createNormals, mutateNormals, mapToInteger, mapToFloat, mapToShuffle } from './random';
 
 export function createGenerationZero(schema, generator) {
-    return Object.keys(schema).reduce(function (instance, key) {
-        var schemaProp = schema[key];
-        var values = random.createNormals(schemaProp, generator);
-        instance[key] = values;
+    return Object.keys(schema).reduce((instance, key) => {
+        const schemaProp = schema[key];
+        instance[key] = createNormals(schemaProp, generator);
         return instance;
-    }, {id: Math.random().toString(32)});
+    }, {
+        id: Math.random().toString(32),
+    });
 }
 
 export function createCrossBreed(schema, parents, parentChooser) {
-    var id = Math.random().toString(32);
+    const id = Math.random().toString(32);
     return Object.keys(schema).reduce((crossDef, key) => {
-        var schemaDef = schema[key];
-        var values = [];
+        const schemaDef = schema[key];
+        const values = [];
         for (let i = 0, l = schemaDef.length; i < l; i += 1) {
-            var p = parentChooser(id, key, parents);
+            const p = parentChooser(id, key, parents);
             values.push(parents[p][key][i]);
         }
         crossDef[key] = values;
@@ -32,10 +33,10 @@ export function createCrossBreed(schema, parents, parentChooser) {
 }
 
 export function createMutatedClone(schema, generator, parent, factor, chanceToMutate) {
-    return Object.keys(schema).reduce(function (clone, key) {
-        var schemaProp = schema[key];
-        var originalValues = parent[key];
-        var values = random.mutateNormals(
+    return Object.keys(schema).reduce((clone, key) => {
+        const schemaProp = schema[key];
+        const originalValues = parent[key];
+        var values = mutateNormals(
             schemaProp, generator, originalValues, factor, chanceToMutate,
         );
         clone[key] = values;
@@ -48,26 +49,27 @@ export function createMutatedClone(schema, generator, parent, factor, chanceToMu
 
 export function applyTypes(schema, parent) {
     return Object.keys(schema).reduce((clone, key) => {
-        var schemaProp = schema[key];
-        var originalValues = parent[key];
-        var values;
-        switch (schemaProp.type) {
-            case 'shuffle' :
-                values = random.mapToShuffle(schemaProp, originalValues);
-                break;
-            case 'float' :
-                values = random.mapToFloat(schemaProp, originalValues);
-                break;
-            case 'integer':
-                values = random.mapToInteger(schemaProp, originalValues);
-                break;
-            default:
-                throw new Error(`Unknown type ${schemaProp.type} of schema for key ${key}`);
-        }
-        clone[key] = values;
-        return clone;
-    }, {
-        id: parent.id,
-        ancestry: parent.ancestry,
-    });
+            const schemaProp = schema[key];
+            const originalValues = parent[key];
+            let values;
+            switch (schemaProp.type) {
+                case 'shuffle' :
+                    values = mapToShuffle(schemaProp, originalValues);
+                    break;
+                case 'float' :
+                    values = mapToFloat(schemaProp, originalValues);
+                    break;
+                case 'integer':
+                    values = mapToInteger(schemaProp, originalValues);
+                    break;
+                default:
+                    throw new Error(`Unknown type ${schemaProp.type} of schema for key ${key}`);
+            }
+            clone[key] = values;
+            return clone;
+        },
+        {
+            id: parent.id,
+            ancestry: parent.ancestry,
+        });
 }

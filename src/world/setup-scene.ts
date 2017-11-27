@@ -1,3 +1,5 @@
+import { b2World } from '../../lib/box2d';
+
 /* globals b2World b2Vec2 b2BodyDef b2FixtureDef b2PolygonShape */
 
 /*

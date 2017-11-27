@@ -20,6 +20,7 @@
     "ter-indent": [
       true,
       4
-    ]
+    ],
+    "align": false
   }
 }

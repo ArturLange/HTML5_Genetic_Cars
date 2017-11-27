@@ -1,5 +1,3 @@
-
-
 import { WorldDefinition } from './interfaces';
 
 export function worldDef(): WorldDefinition {

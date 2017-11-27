@@ -3,32 +3,33 @@ import { createChassis, createWheel } from './parts-creation';
 import { B2RevoluteJointDef } from '../../lib/box2d-wrapper';
 
 export function defToCar(normalDef, world, constants) {
-    var car_def = applyTypes(constants.schema, normalDef);
-    let instance = {};
-    instance.chassis = createChassis(world, car_def.vertex_list, car_def.chassis_density);
+    const carDef = applyTypes(constants.schema, normalDef);
+    const instance = {
+        chassis: createChassis(world, carDef.vertex_list, carDef.chassis_density),
+        wheels: [],
+    };
 
-    const wheelCount = car_def.wheel_radius.length;
+    const wheelCount = carDef.wheel_radius.length;
 
-    instance.wheels = [];
     for (let i = 0; i < wheelCount; i += 1) {
         instance.wheels[i] = createWheel(
             world,
-            car_def.wheel_radius[i],
-            car_def.wheel_density[i],
+            carDef.wheel_radius[i],
+            carDef.wheel_density[i],
         );
     }
 
-    var carMass = instance.chassis.GetMass();
+    let carMass = instance.chassis.GetMass();
     for (let i = 0; i < wheelCount; i += 1) {
         carMass += instance.wheels[i].GetMass();
     }
 
-    var jointDef = new B2RevoluteJointDef();
+    const jointDef = new B2RevoluteJointDef();
 
     for (let i = 0; i < wheelCount; i += 1) {
-        var torque = (carMass * -constants.gravity.y) / car_def.wheel_radius[i];
+        var torque = (carMass * -constants.gravity.y) / carDef.wheel_radius[i];
 
-        var randvertex = instance.chassis.vertex_list[car_def.wheel_vertex[i]];
+        var randvertex = instance.chassis.vertex_list[carDef.wheel_vertex[i]];
         jointDef.localAnchorA.Set(randvertex.x, randvertex.y);
         jointDef.localAnchorB.Set(0, 0);
         jointDef.maxMotorTorque = torque;
