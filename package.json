@@ -6,7 +6,8 @@
     "build": "webpack",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "lint-fix": "tslint --fix -p tsconfig.json -c tslint.json",
-    "test": "mocha -r ts-node/register test/**/*",
+    "test": "mocha --require ts-node/register test/**/*",
+    "cov": "nyc mocha --require ts-node/register --require source-map-support/register --recursive test/**/*",
     "watch": " npm run build && watch-run -p './src/**' npm run build"
   },
   "repository": {
@@ -29,13 +30,29 @@
     "@types/mocha": "^2.2.44",
     "chai": "^4.1.2",
     "d3": "^3.5.17",
+    "istanbul": "^0.4.5",
     "mersenne-twister": "^1.1.0",
     "mocha": "^4.0.1",
+    "nyc": "^11.3.0",
     "ts-node": "^3.3.0",
     "tslint": "^5.8.0",
     "tslint-config-airbnb": "^5.4.2",
     "typescript": "^2.6.1",
     "watch-run": "^1.2.5",
     "webpack": "^3.8.1"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ],
+    "reporter": [
+      "html",
+      "text"
+    ],
+    "all": true
   }
 }
