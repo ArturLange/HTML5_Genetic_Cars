@@ -1,34 +1,31 @@
 import { drawCircle } from './draw-circle';
 import { drawVirtualPoly } from './draw-virtual-poly';
 
-export function drawCar(car_constants, myCar, camera, ctx) {
-    var camera_x = camera.pos.x;
-    var zoom = camera.zoom;
-
-    var wheelMinDensity = car_constants.wheelMinDensity;
-    var wheelDensityRange = car_constants.wheelDensityRange;
+export function drawCar(carConstants, myCar, camera, ctx) {
+    const wheelMinDensity = carConstants.wheelMinDensity;
+    const wheelDensityRange = carConstants.wheelDensityRange;
 
     if (!myCar.alive) {
         return;
     }
-    var myCarPos = myCar.getPosition();
+    const myCarPos = myCar.getPosition();
 
-    if (myCarPos.x < (camera_x - 5)) {
+    if (myCarPos.x < (camera.pos.x - 5)) {
         // too far behind, don't draw
         return;
     }
 
     ctx.strokeStyle = '#444';
-    ctx.lineWidth = 1 / zoom;
+    ctx.lineWidth = 1 / camera.zoom;
 
-    var wheels = myCar.car.car.wheels;
+    const wheels = myCar.car.car.wheels;
 
-    for (var i = 0; i < wheels.length; i++) {
-        var b = wheels[i];
-        for (var f = b.GetFixtureList(); f; f = f.m_next) {
-            var s = f.GetShape();
-            var color = Math.round(255 - (255 * (f.m_density - wheelMinDensity)) / wheelDensityRange).toString();
-            var rgbcolor = 'rgb(' + color + ',' + color + ',' + color + ')';
+    for (let i = 0; i < wheels.length; i += 1) {
+        const b = wheels[i];
+        for (let f = b.GetFixtureList(); f; f = f.m_next) {
+            const s = f.GetShape();
+            const color = Math.round(255 - (255 * (f.m_density - wheelMinDensity)) / wheelDensityRange).toString();
+            const rgbcolor = 'rgb(' + color + ',' + color + ',' + color + ')';
             drawCircle(ctx, b, s.m_p, s.m_radius, b.m_sweep.a, rgbcolor);
         }
     }
@@ -42,12 +39,12 @@ export function drawCar(car_constants, myCar, camera, ctx) {
     }
     ctx.beginPath();
 
-    var chassis = myCar.car.car.chassis;
+    const chassis = myCar.car.car.chassis;
 
-    for (f = chassis.GetFixtureList(); f; f = f.m_next) {
-        var cs = f.GetShape();
+    for (let f = chassis.GetFixtureList(); f; f = f.m_next) {
+        const cs = f.GetShape();
         drawVirtualPoly(ctx, chassis, cs.m_vertices, cs.m_vertexCount);
     }
     ctx.fill();
     ctx.stroke();
-};
+}

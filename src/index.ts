@@ -29,7 +29,7 @@ var ghost_pause = ghost_fns.ghost_pause;
 var ghost_resume = ghost_fns.ghost_resume;
 var ghost_create_replay = ghost_fns.ghost_create_replay;
 
-var cw_Car = require('./draw/draw-car-stats');
+import { Car as cw_Car } from './draw/car';
 var ghost;
 var carMap = new Map();
 
@@ -433,7 +433,7 @@ function cw_resetWorld() {
 }
 
 function setupCarUI() {
-    currentRunner.cars.map(function (carInfo) {
+    currentRunner.cars.map((carInfo) => {
         var car = new cw_Car(carInfo, carMap);
         carMap.set(carInfo, car);
         car.replay = ghost_create_replay();
