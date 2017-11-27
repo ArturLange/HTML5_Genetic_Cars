@@ -13,7 +13,7 @@ world_def = {
 
 */
 
-module.exports = function (worldDef) {
+export function setupScene(worldDef) {
 
     var world = new b2World(worldDef.gravity, worldDef.doSleep);
     var floorTiles = cw_createFloor(
