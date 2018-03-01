@@ -7,6 +7,8 @@ import carConstruct = require('./car-schema/construct');
 import { drawCar } from './draw/draw-car';
 import graph_fns = require('./draw/plot-graphs');
 
+import * as seedrandom from 'seedrandom';
+
 const plotGraphs = graph_fns.plotGraphs;
 const cwClearGraphics = graph_fns.clearGraphics;
 import { runDefs } from './world/run';
@@ -74,7 +76,7 @@ const generationConfig = require('./generation-config');
 const world_def = {
     gravity: new B2Vec2(0.0, -9.81),
     doSleep: true,
-    floorseed: btoa(Math.seedrandom()),
+    floorseed: btoa(seedrandom()),
     tileDimensions: new B2Vec2(1.5, 0.15),
     maxFloorTiles: 200,
     mutable_floor: false,
@@ -375,7 +377,7 @@ function cw_newRound(results) {
     if (world_def.mutable_floor) {
         // GHOST DISABLED
         ghost = null;
-        world_def.floorseed = btoa(Math.seedrandom());
+        world_def.floorseed = btoa(seedrandom());
     } else {
         // RE-ENABLE GHOST
         ghost_reset_ghost(ghost);
@@ -410,7 +412,7 @@ function cw_resetWorld() {
     world_def.floorseed = document.getElementById('newseed').value;
     cw_resetPopulationUI();
 
-    Math.seedrandom();
+    seedrandom();
     cw_generationZero();
     currentRunner = runDefs(
         world_def, generationState.generation, uiListeners,
@@ -479,7 +481,7 @@ function restoreProgress() {
 
     currentRunner = runDefs(world_def, generationState.generation, uiListeners);
     cw_drawMiniMap();
-    Math.seedrandom();
+    seedrandom();
 
     resetCarUI();
     cw_startSimulation();
@@ -569,7 +571,7 @@ function cw_init() {
     }
     mmm.parentNode.removeChild(mmm);
     hbar.parentNode.removeChild(hbar);
-    world_def.floorseed = btoa(Math.seedrandom());
+    world_def.floorseed = btoa(seedrandom());
     cw_generationZero();
     ghost = ghost_create_ghost();
     resetCarUI();

@@ -8,6 +8,8 @@ import {
     B2Vec2,
 } from '../lib/box2d-wrapper';
 
+import * as seedrandom from 'seedrandom';
+
 // ======= WORLD STATE ======
 
 var $graphList = document.querySelector('#graph-list');
@@ -19,7 +21,7 @@ function stringToHTML(s) {
     return temp.children[0];
 }
 
-var states, runners, results, graphState = {};
+const states, runners, results, graphState = {};
 
 function updateUI(key, scores) {
     var $graph = $graphList.querySelector('#graph-' + key);
@@ -49,7 +51,7 @@ var max_car_health = box2dfps * 10;
 var world_def = {
     gravity: new B2Vec2(0.0, -9.81),
     doSleep: true,
-    floorseed: btoa(Math.seedrandom()),
+    floorseed: btoa(seedrandom()),
     tileDimensions: new B2Vec2(1.5, 0.15),
     maxFloorTiles: 200,
     mutable_floor: false,
@@ -144,7 +146,7 @@ function cw_resetPopulationUI() {
 
 function cw_resetWorld() {
     cw_resetPopulationUI();
-    Math.seedrandom();
+    seedrandom();
     generationZero();
 }
 

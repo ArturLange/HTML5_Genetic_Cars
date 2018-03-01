@@ -1,11 +1,12 @@
 import { defToCar } from '../car-schema/def-to-car';
 import { calculateScore, getStatus, updateState, getInitialState } from '../car-schema/run';
 import { setupScene } from './setup-scene';
+import * as seedrandom from 'seedrandom';
 
 export function runDefs(worldDef, defs, listeners) {
     if (worldDef.mutable_floor) {
         // GHOST DISABLED
-        worldDef.floorseed = btoa(Math.seedrandom());
+        worldDef.floorseed = btoa(seedrandom());
     }
 
     const scene = setupScene(worldDef);

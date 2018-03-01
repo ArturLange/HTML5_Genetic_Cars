@@ -15,6 +15,9 @@ world_def = {
 
 */
 
+
+import * as seedrandom from 'seedrandom';
+
 export function setupScene(worldDef) {
 
     var world = new b2World(worldDef.gravity, worldDef.doSleep);
@@ -45,7 +48,7 @@ function cw_createFloor(world, floorseed, dimensions, maxFloorTiles, mutable_flo
     var last_tile = null;
     var tile_position = new b2Vec2(-5, 0);
     var cw_floorTiles = [];
-    Math.seedrandom(floorseed);
+    seedrandom(floorseed);
     for (var k = 0; k < maxFloorTiles; k++) {
         if (!mutable_floor) {
             // keep old impossible tracks if not using mutable floors
@@ -91,7 +94,7 @@ function cw_createFloorTile(world, dim, position, angle) {
 }
 
 function cw_rotateFloorTile(coords, center, angle) {
-    return coords.map(function (coord) {
+    return coords.map((coord) => {
         return {
             x: Math.cos(angle) * (coord.x - center.x) - Math.sin(angle) * (coord.y - center.y) + center.x,
             y: Math.sin(angle) * (coord.x - center.x) + Math.cos(angle) * (coord.y - center.y) + center.y,

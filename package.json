@@ -34,6 +34,7 @@
     "mersenne-twister": "^1.1.0",
     "mocha": "^4.0.1",
     "nyc": "^11.3.0",
+    "seedrandom": "^2.4.3",
     "ts-node": "^3.3.0",
     "tslint": "^5.8.0",
     "tslint-config-airbnb": "^5.4.2",
