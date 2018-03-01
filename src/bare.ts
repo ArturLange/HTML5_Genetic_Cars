@@ -12,8 +12,8 @@ import * as seedrandom from 'seedrandom';
 
 // ======= WORLD STATE ======
 
-var $graphList = document.querySelector('#graph-list');
-var $graphTemplate = document.querySelector('#graph-template');
+const $graphList = document.querySelector('#graph-list');
+const $graphTemplate = document.querySelector('#graph-template');
 
 function stringToHTML(s) {
     var temp = document.createElement('div');
@@ -21,7 +21,10 @@ function stringToHTML(s) {
     return temp.children[0];
 }
 
-const states, runners, results, graphState = {};
+let states;
+let runners;
+let results;
+let graphState = {};
 
 function updateUI(key, scores) {
     var $graph = $graphList.querySelector('#graph-' + key);
@@ -45,10 +48,10 @@ function updateUI(key, scores) {
     );
 }
 
-var box2dfps = 60;
-var max_car_health = box2dfps * 10;
+const box2dfps = 60;
+const max_car_health = box2dfps * 10;
 
-var world_def = {
+const world_def = {
     gravity: new B2Vec2(0.0, -9.81),
     doSleep: true,
     floorseed: btoa(seedrandom()),
@@ -66,7 +69,7 @@ var manageRound = {
     annealing: require('./machine-learning/simulated-annealing/manage-round'),
 };
 
-var createListeners = function (key) {
+const createListeners = function (key) {
     return {
         preCarStep: function () {},
         carStep: function () {},

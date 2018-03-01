@@ -27,7 +27,7 @@ import {
 let ghost;
 const carMap = new Map();
 
-const doDraw = true;
+let doDraw = true;
 const cwPaused = false;
 
 const box2dfps = 60;
@@ -46,12 +46,12 @@ const camera = {
 };
 
 const minimapcamera = document.getElementById('minimapcamera').style;
-const minimapholder = document.querySelector('#minimapholder');
+const minimapholder = <HTMLDivElement>document.querySelector('#minimapholder');
 
-const minimapcanvas = document.getElementById('minimap');
+const minimapcanvas = <HTMLCanvasElement>document.getElementById('minimap');
 const minimapctx = minimapcanvas.getContext('2d');
 const minimapscale = 3;
-const minimapfogdistance = 0;
+let minimapfogdistance = 0;
 const fogdistance = document.getElementById('minimapfog').style;
 
 const carConstants = carConstruct.carConstants();
@@ -73,21 +73,21 @@ minimapcamera.height = 6 * minimapscale + 'px';
 // ======= WORLD STATE ======
 const generationConfig = require('./generation-config');
 
-const world_def = {
+const worldDef = {
+    box2dfps,
     gravity: new B2Vec2(0.0, -9.81),
     doSleep: true,
     floorseed: btoa(seedrandom()),
     tileDimensions: new B2Vec2(1.5, 0.15),
     maxFloorTiles: 200,
     mutable_floor: false,
-    box2dfps: box2dfps,
     motorSpeed: 20,
     max_car_health: maxCarHealth,
     schema: generationConfig.constants.schema,
 };
 
-var cw_deadCars;
-var graphState = {
+let cwDeadCars;
+let graphState = {
     cw_topScores: [],
     cw_graphAverage: [],
     cw_graphElite: [],
@@ -105,12 +105,12 @@ function resetGraphState() {
 
 // ==========================
 
-var generationState;
+let generationState;
 
 // ======== Activity State ====
-var cw_runningInterval;
-var cw_drawInterval;
-var currentRunner;
+let cw_runningInterval;
+let cw_drawInterval;
+let currentRunner;
 
 function showDistance(distance, height) {
     distanceMeter.innerHTML = distance + ' meters<br />';
@@ -134,7 +134,7 @@ function cw_generationZero() {
 }
 
 function resetCarUI() {
-    cw_deadCars = 0;
+    cwDeadCars = 0;
     leaderPosition = {
         x: 0, y: 0,
     };
@@ -276,11 +276,12 @@ const uiListeners = {
 
         const k = carInfo.index;
 
-        var car = carInfo.car, score = carInfo.score;
-        carMap.get(carInfo).kill(currentRunner, world_def);
+        const car = carInfo.car;
+        const score = carInfo.score;
+        carMap.get(carInfo).kill(currentRunner, worldDef);
 
         // refocus camera to leader on death
-        if (camera.target == carInfo) {
+        if (camera.target === carInfo) {
             cw_setCameraTarget(-1);
         }
         // console.log(score);
@@ -288,12 +289,12 @@ const uiListeners = {
         ghost_compare_to_replay(car.replay, ghost, score.v);
         score.i = generationState.counter;
 
-        cw_deadCars += 1;
+        cwDeadCars += 1;
         const generationSize = generationConfig.constants.generationSize;
-        document.getElementById('population').innerHTML = (generationSize - cw_deadCars).toString();
+        document.getElementById('population').innerHTML = (generationSize - cwDeadCars).toString();
 
         // console.log(leaderPosition.leader, k)
-        if (leaderPosition.leader == k) {
+        if (leaderPosition.leader === k) {
             // leader is dead, find new leader
             cw_findLeader();
         }
@@ -313,9 +314,9 @@ function simulationStep() {
 }
 
 function updateCarUI(carInfo) {
-    var k = carInfo.index;
-    var car = carMap.get(carInfo);
-    var position = car.getPosition();
+    const k = carInfo.index;
+    const car = carMap.get(carInfo);
+    const position = car.getPosition();
 
     ghost_add_replay_frame(car.replay, car.car.car);
     car.minimapmarker.style.left = Math.round((position.x + 5) * minimapscale) + 'px';
@@ -351,12 +352,11 @@ function fastForward() {
 
 function cleanupRound(results) {
 
-    results.sort(function (a, b) {
+    results.sort((a, b) => {
         if (a.score.v > b.score.v) {
             return -1;
-        } else {
-            return 1;
         }
+        return 1;
     });
     graphState = plotGraphs(
         document.getElementById('graphcanvas'),
@@ -374,15 +374,15 @@ function cw_newRound(results) {
     generationState = nextGeneration(
         generationState, results, generationConfig(),
     );
-    if (world_def.mutable_floor) {
+    if (worldDef.mutable_floor) {
         // GHOST DISABLED
         ghost = null;
-        world_def.floorseed = btoa(seedrandom());
+        worldDef.floorseed = btoa(seedrandom());
     } else {
         // RE-ENABLE GHOST
         ghost_reset_ghost(ghost);
     }
-    currentRunner = runDefs(world_def, generationState.generation, uiListeners);
+    currentRunner = runDefs(worldDef, generationState.generation, uiListeners);
     setupCarUI();
     cw_drawMiniMap();
     resetCarUI();
@@ -409,13 +409,13 @@ function cw_resetPopulationUI() {
 function cw_resetWorld() {
     doDraw = true;
     cw_stopSimulation();
-    world_def.floorseed = document.getElementById('newseed').value;
+    worldDef.floorseed = document.getElementById('newseed').value;
     cw_resetPopulationUI();
 
     seedrandom();
     cw_generationZero();
     currentRunner = runDefs(
-        world_def, generationState.generation, uiListeners,
+        worldDef, generationState.generation, uiListeners,
     );
 
     ghost = ghost_create_ghost();
@@ -428,7 +428,7 @@ function cw_resetWorld() {
 
 function setupCarUI() {
     currentRunner.cars.map((carInfo) => {
-        var car = new cw_Car(carInfo, carMap);
+        const car = new cw_Car(carInfo, carMap);
         carMap.set(carInfo, car);
         car.replay = ghost_create_replay();
         ghost_add_replay_frame(car.replay, car.car.car);
@@ -463,7 +463,7 @@ function saveProgress() {
     localStorage.cw_genCounter = generationState.counter;
     localStorage.cw_ghost = JSON.stringify(ghost);
     localStorage.cw_topScores = JSON.stringify(graphState.cw_topScores);
-    localStorage.cw_floorSeed = world_def.floorseed;
+    localStorage.cw_floorSeed = worldDef.floorseed;
 }
 
 function restoreProgress() {
@@ -476,10 +476,10 @@ function restoreProgress() {
     generationState.counter = localStorage.cw_genCounter;
     ghost = JSON.parse(localStorage.cw_ghost);
     graphState.cw_topScores = JSON.parse(localStorage.cw_topScores);
-    world_def.floorseed = localStorage.cw_floorSeed;
-    document.getElementById('newseed').value = world_def.floorseed;
+    worldDef.floorseed = localStorage.cw_floorSeed;
+    document.getElementById('newseed').value = worldDef.floorseed;
 
-    currentRunner = runDefs(world_def, generationState.generation, uiListeners);
+    currentRunner = runDefs(worldDef, generationState.generation, uiListeners);
     cw_drawMiniMap();
     seedrandom();
 
@@ -571,11 +571,11 @@ function cw_init() {
     }
     mmm.parentNode.removeChild(mmm);
     hbar.parentNode.removeChild(hbar);
-    world_def.floorseed = btoa(seedrandom());
+    worldDef.floorseed = btoa(seedrandom());
     cw_generationZero();
     ghost = ghost_create_ghost();
     resetCarUI();
-    currentRunner = runDefs(world_def, generationState.generation, uiListeners);
+    currentRunner = runDefs(worldDef, generationState.generation, uiListeners);
     setupCarUI();
     cw_drawMiniMap();
     cw_runningInterval = setInterval(simulationStep, Math.round(1000 / box2dfps));
@@ -633,7 +633,7 @@ minimapholder.onclick = function (event) {
 
 document.querySelector('#mutationrate').addEventListener('change', (e) => {
     const elem = <HTMLSelectElement>e.target;
-    cw_setMutation(elem.options[elem.selectedIndex].value);
+    cwSetMutation(elem.options[elem.selectedIndex].value);
 });
 
 document.querySelector('#mutationsize').addEventListener('change', (e) => {
@@ -656,7 +656,7 @@ document.querySelector('#elitesize').addEventListener('change', (e) => {
     cwSetEliteSize(elem.options[elem.selectedIndex].value);
 });
 
-function cw_setMutation(mutation) {
+function cwSetMutation(mutation) {
     generationConfig.constants.gen_mutation = parseFloat(mutation);
 }
 
@@ -665,15 +665,15 @@ function cwSetMutationRange(range) {
 }
 
 function cwSetMutableFloor(choice) {
-    world_def.mutable_floor = (choice === 1);
+    worldDef.mutable_floor = (choice === 1);
 }
 
 function cwSetGravity(choice) {
-    world_def.gravity = new B2Vec2(0.0, -parseFloat(choice));
-    var world = currentRunner.scene.world;
+    worldDef.gravity = new B2Vec2(0.0, -parseFloat(choice));
+    const world = currentRunner.scene.world;
     // CHECK GRAVITY CHANGES
-    if (world.GetGravity().y != world_def.gravity.y) {
-        world.SetGravity(world_def.gravity);
+    if (world.GetGravity().y !== worldDef.gravity.y) {
+        world.SetGravity(worldDef.gravity);
     }
 }
 
