@@ -1,37 +1,37 @@
-var create = require('../create-instance');
+import { createGenerationZero, createMutatedClone, createCrossBreed } from '../create-instance';
 
 export function generationZero(config) {
-    var generationSize = config.generationSize,
-        schema = config.schema;
-    var cw_carGeneration = [];
-    for (var k = 0; k < generationSize; k++) {
-        var def = create.createGenerationZero(schema, () => Math.random());
+    const generationSize = config.generationSize;
+    const schema = config.schema;
+    const cwCarGeneration = [];
+    for (let k = 0; k < generationSize; k += 1) {
+        const def = createGenerationZero(schema, () => Math.random());
         def.index = k;
-        cw_carGeneration.push(def);
+        cwCarGeneration.push(def);
     }
     return {
         counter: 0,
-        generation: cw_carGeneration,
+        generation: cwCarGeneration,
     };
 }
 
 export function nextGeneration(previousState,
                                scores,
                                config) {
-    var champion_length = config.championLength,
-        generationSize = config.generationSize,
-        selectFromAllParents = config.selectFromAllParents;
+    const championLength = config.championLength;
+    const generationSize = config.generationSize;
+    const selectFromAllParents = config.selectFromAllParents;
 
     var newGeneration = [];
     var newborn;
-    for (var k = 0; k < champion_length; k += 1) {
+    for (var k = 0; k < championLength; k += 1) {
         ``;
         scores[k].def.is_elite = true;
         scores[k].def.index = k;
         newGeneration.push(scores[k].def);
     }
     var parentList = [];
-    for (k = champion_length; k < generationSize; k++) {
+    for (k = championLength; k < generationSize; k++) {
         var parent1 = selectFromAllParents(scores, parentList);
         var parent2 = parent1;
         while (parent2 == parent1) {
@@ -55,17 +55,17 @@ export function nextGeneration(previousState,
 }
 
 function makeChild(config, parents) {
-    var schema = config.schema;
-    var pickParent = config.pickParent;
-    return create.createCrossBreed(schema, parents, pickParent);
+    const schema = config.schema;
+    const pickParent = config.pickParent;
+    return createCrossBreed(schema, parents, pickParent);
 }
 
 function mutate(config, parent) {
-    var schema = config.schema,
-        mutation_range = config.mutation_range,
-        gen_mutation = config.gen_mutation,
-        generateRandom = config.generateRandom;
-    return create.createMutatedClone(
+    const schema = config.schema;
+    const mutation_range = config.mutation_range;
+    const gen_mutation = config.gen_mutation;
+    const generateRandom = config.generateRandom;
+    return createMutatedClone(
         schema,
         generateRandom,
         parent,

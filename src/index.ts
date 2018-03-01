@@ -4,13 +4,11 @@
 
 import carConstruct = require('./car-schema/construct');
 
-import ghost_fns = require('./ghost/index');
-
 import { drawCar } from './draw/draw-car';
 import graph_fns = require('./draw/plot-graphs');
 
-var plot_graphs = graph_fns.plotGraphs;
-var cw_clearGraphics = graph_fns.clearGraphics;
+const plotGraphs = graph_fns.plotGraphs;
+const cwClearGraphics = graph_fns.clearGraphics;
 import { runDefs } from './world/run';
 import { drawFloor } from './draw/draw-floor';
 import { generationZero, nextGeneration } from './machine-learning/genetic-algorithm/manage-round';
@@ -18,31 +16,25 @@ import {
     B2Vec2,
 } from '../lib/box2d-wrapper';
 
-var ghost_draw_frame = ghost_fns.ghost_draw_frame;
-var ghost_create_ghost = ghost_fns.ghost_create_ghost;
-var ghost_add_replay_frame = ghost_fns.ghost_add_replay_frame;
-var ghost_compare_to_replay = ghost_fns.ghost_compare_to_replay;
-var ghost_get_position = ghost_fns.ghost_get_position;
-var ghost_move_frame = ghost_fns.ghost_move_frame;
-var ghost_reset_ghost = ghost_fns.ghost_reset_ghost;
-var ghost_pause = ghost_fns.ghost_pause;
-var ghost_resume = ghost_fns.ghost_resume;
-var ghost_create_replay = ghost_fns.ghost_create_replay;
-
 import { Car as cw_Car } from './draw/car';
-var ghost;
-var carMap = new Map();
+import {
+    ghost_get_position, ghost_draw_frame, ghost_move_frame,
+    ghost_compare_to_replay, ghost_add_replay_frame, ghost_reset_ghost, ghost_create_ghost,
+    ghost_create_replay,
+} from './ghost';
+let ghost;
+const carMap = new Map();
 
-var doDraw = true;
-var cw_paused = false;
+const doDraw = true;
+const cwPaused = false;
 
-var box2dfps = 60;
-var screenfps = 60;
+const box2dfps = 60;
+const screenfps = 60;
 
-var canvas = document.getElementById('mainbox');
-var ctx = canvas.getContext('2d');
+const canvas = <HTMLCanvasElement>document.getElementById('mainbox');
+const ctx = canvas.getContext('2d');
 
-var camera = {
+const camera = {
     speed: 0.05,
     pos: {
         x: 0, y: 0,
@@ -51,25 +43,25 @@ var camera = {
     zoom: 70,
 };
 
-var minimapcamera = document.getElementById('minimapcamera').style;
-var minimapholder = document.querySelector('#minimapholder');
+const minimapcamera = document.getElementById('minimapcamera').style;
+const minimapholder = document.querySelector('#minimapholder');
 
-var minimapcanvas = document.getElementById('minimap');
-var minimapctx = minimapcanvas.getContext('2d');
-var minimapscale = 3;
-var minimapfogdistance = 0;
-var fogdistance = document.getElementById('minimapfog').style;
+const minimapcanvas = document.getElementById('minimap');
+const minimapctx = minimapcanvas.getContext('2d');
+const minimapscale = 3;
+const minimapfogdistance = 0;
+const fogdistance = document.getElementById('minimapfog').style;
 
-var carConstants = carConstruct.carConstants();
+const carConstants = carConstruct.carConstants();
 
-var max_car_health = box2dfps * 10;
+const maxCarHealth = box2dfps * 10;
 
-var cw_ghostReplayInterval = null;
+const cwGhostReplayInterval = null;
 
-var distanceMeter = document.getElementById('distancemeter');
-var heightMeter = document.getElementById('heightmeter');
+const distanceMeter = document.getElementById('distancemeter');
+const heightMeter = document.getElementById('heightmeter');
 
-var leaderPosition = {
+let leaderPosition = {
     x: 0, y: 0,
 };
 
@@ -77,9 +69,9 @@ minimapcamera.width = 12 * minimapscale + 'px';
 minimapcamera.height = 6 * minimapscale + 'px';
 
 // ======= WORLD STATE ======
-var generationConfig = require('./generation-config');
+const generationConfig = require('./generation-config');
 
-var world_def = {
+const world_def = {
     gravity: new B2Vec2(0.0, -9.81),
     doSleep: true,
     floorseed: btoa(Math.seedrandom()),
@@ -88,7 +80,7 @@ var world_def = {
     mutable_floor: false,
     box2dfps: box2dfps,
     motorSpeed: 20,
-    max_car_health: max_car_health,
+    max_car_health: maxCarHealth,
     schema: generationConfig.constants.schema,
 };
 
@@ -229,7 +221,7 @@ function cw_drawCars() {
 }
 
 function toggleDisplay() {
-    if (cw_paused) {
+    if (cwPaused) {
         return;
     }
     canvas.width = canvas.width;
@@ -271,7 +263,7 @@ function cw_drawMiniMap() {
 
 /* ==== END Drawing ======================================================== */
 /* ========================================================================= */
-var uiListeners = {
+const uiListeners = {
     preCarStep: function () {
         ghost_move_frame(ghost);
     },
@@ -280,7 +272,7 @@ var uiListeners = {
     },
     carDeath(carInfo) {
 
-        var k = carInfo.index;
+        const k = carInfo.index;
 
         var car = carInfo.car, score = carInfo.score;
         carMap.get(carInfo).kill(currentRunner, world_def);
@@ -294,8 +286,8 @@ var uiListeners = {
         ghost_compare_to_replay(car.replay, ghost, score.v);
         score.i = generationState.counter;
 
-        cw_deadCars++;
-        var generationSize = generationConfig.constants.generationSize;
+        cw_deadCars += 1;
+        const generationSize = generationConfig.constants.generationSize;
         document.getElementById('population').innerHTML = (generationSize - cw_deadCars).toString();
 
         // console.log(leaderPosition.leader, k)
@@ -325,7 +317,7 @@ function updateCarUI(carInfo) {
 
     ghost_add_replay_frame(car.replay, car.car.car);
     car.minimapmarker.style.left = Math.round((position.x + 5) * minimapscale) + 'px';
-    car.healthBar.width = Math.round((car.car.state.health / max_car_health) * 100) + '%';
+    car.healthBar.width = Math.round((car.car.state.health / maxCarHealth) * 100) + '%';
     if (position.x > leaderPosition.x) {
         leaderPosition = position;
         leaderPosition.leader = k;
@@ -364,7 +356,7 @@ function cleanupRound(results) {
             return 1;
         }
     });
-    graphState = plot_graphs(
+    graphState = plotGraphs(
         document.getElementById('graphcanvas'),
         document.getElementById('topscores'),
         null,
@@ -408,7 +400,7 @@ function cw_resetPopulationUI() {
     document.getElementById('generation').innerHTML = '';
     document.getElementById('cars').innerHTML = '';
     document.getElementById('topscores').innerHTML = '';
-    cw_clearGraphics();
+    cwClearGraphics();
     resetGraphState();
 }
 
@@ -441,23 +433,23 @@ function setupCarUI() {
     });
 }
 
-document.querySelector('#fast-forward').addEventListener('click', function () {
+document.querySelector('#fast-forward').addEventListener('click', () => {
     fastForward();
 });
 
-document.querySelector('#save-progress').addEventListener('click', function () {
+document.querySelector('#save-progress').addEventListener('click', () => {
     saveProgress();
 });
 
-document.querySelector('#restore-progress').addEventListener('click', function () {
+document.querySelector('#restore-progress').addEventListener('click', () => {
     restoreProgress();
 });
 
-document.querySelector('#toggle-display').addEventListener('click', function () {
+document.querySelector('#toggle-display').addEventListener('click', () => {
     toggleDisplay();
 });
 
-document.querySelector('#new-population').addEventListener('click', function () {
+document.querySelector('#new-population').addEventListener('click', () => {
     cw_resetPopulationUI();
     cw_generationZero();
     ghost = ghost_create_ghost();
@@ -493,7 +485,7 @@ function restoreProgress() {
     cw_startSimulation();
 }
 
-document.querySelector('#confirm-reset').addEventListener('click', function () {
+document.querySelector('#confirm-reset').addEventListener('click', () => {
     cw_confirmResetWorld();
 });
 
@@ -508,14 +500,14 @@ function cw_confirmResetWorld() {
 // ghost replay stuff
 
 function cw_pauseSimulation() {
-    cw_paused = true;
+    cwPaused = true;
     clearInterval(cw_runningInterval);
     clearInterval(cw_drawInterval);
     ghost_pause(ghost);
 }
 
 function cw_resumeSimulation() {
-    cw_paused = false;
+    cwPaused = false;
     ghost_resume(ghost);
     cw_runningInterval = setInterval(simulationStep, Math.round(1000 / box2dfps));
     cw_drawInterval = setInterval(cw_drawScreen, Math.round(1000 / screenfps));
@@ -526,12 +518,12 @@ function cw_startGhostReplay() {
         toggleDisplay();
     }
     cw_pauseSimulation();
-    cw_ghostReplayInterval = setInterval(cw_drawGhostReplay, Math.round(1000 / screenfps));
+    cwGhostReplayInterval = setInterval(cw_drawGhostReplay, Math.round(1000 / screenfps));
 }
 
 function cw_stopGhostReplay() {
-    clearInterval(cw_ghostReplayInterval);
-    cw_ghostReplayInterval = null;
+    clearInterval(cwGhostReplayInterval);
+    cwGhostReplayInterval = null;
     cw_findLeader();
     camera.pos.x = leaderPosition.x;
     camera.pos.y = leaderPosition.y;
@@ -543,7 +535,7 @@ document.querySelector('#toggle-ghost').addEventListener('click', (e) => {
 });
 
 function cw_toggleGhostReplay(button) {
-    if (cw_ghostReplayInterval == null) {
+    if (cwGhostReplayInterval == null) {
         cw_startGhostReplay();
         button.value = 'Resume simulation';
     } else {
@@ -637,44 +629,44 @@ minimapholder.onclick = function (event) {
     }
 };
 
-document.querySelector('#mutationrate').addEventListener('change', function (e) {
-    var elem = e.target;
+document.querySelector('#mutationrate').addEventListener('change', (e) => {
+    const elem = <HTMLSelectElement>e.target;
     cw_setMutation(elem.options[elem.selectedIndex].value);
 });
 
-document.querySelector('#mutationsize').addEventListener('change', function (e) {
-    var elem = e.target;
-    cw_setMutationRange(elem.options[elem.selectedIndex].value);
+document.querySelector('#mutationsize').addEventListener('change', (e) => {
+    const elem = <HTMLSelectElement>e.target;
+    cwSetMutationRange(elem.options[elem.selectedIndex].value);
 });
 
-document.querySelector('#floor').addEventListener('change', function (e) {
-    var elem = e.target;
-    cw_setMutableFloor(elem.options[elem.selectedIndex].value);
+document.querySelector('#floor').addEventListener('change', (e) => {
+    const elem = <HTMLSelectElement>e.target;
+    cwSetMutableFloor(elem.options[elem.selectedIndex].value);
 });
 
-document.querySelector('#gravity').addEventListener('change', function (e) {
-    var elem = e.target;
-    cw_setGravity(elem.options[elem.selectedIndex].value);
+document.querySelector('#gravity').addEventListener('change', (e) => {
+    const elem = <HTMLSelectElement>e.target;
+    cwSetGravity(elem.options[elem.selectedIndex].value);
 });
 
-document.querySelector('#elitesize').addEventListener('change', function (e) {
-    var elem = e.target;
-    cw_setEliteSize(elem.options[elem.selectedIndex].value);
+document.querySelector('#elitesize').addEventListener('change', (e) => {
+    const elem = <HTMLSelectElement>e.target;
+    cwSetEliteSize(elem.options[elem.selectedIndex].value);
 });
 
 function cw_setMutation(mutation) {
     generationConfig.constants.gen_mutation = parseFloat(mutation);
 }
 
-function cw_setMutationRange(range) {
+function cwSetMutationRange(range) {
     generationConfig.constants.mutation_range = parseFloat(range);
 }
 
-function cw_setMutableFloor(choice) {
+function cwSetMutableFloor(choice) {
     world_def.mutable_floor = (choice === 1);
 }
 
-function cw_setGravity(choice) {
+function cwSetGravity(choice) {
     world_def.gravity = new B2Vec2(0.0, -parseFloat(choice));
     var world = currentRunner.scene.world;
     // CHECK GRAVITY CHANGES
@@ -683,7 +675,7 @@ function cw_setGravity(choice) {
     }
 }
 
-function cw_setEliteSize(clones) {
+function cwSetEliteSize(clones) {
     generationConfig.constants.championLength = parseInt(clones, 10);
 }
 

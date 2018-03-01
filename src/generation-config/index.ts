@@ -1,11 +1,11 @@
 import { pickParent } from './pickParent';
 
-var carConstruct = require('../car-schema/construct');
+const carConstruct = require('../car-schema/construct');
 
-var carConstants = carConstruct.carConstants();
+const carConstants = carConstruct.carConstants();
 
-var schema = carConstruct.generateSchema(carConstants);
-var selectFromAllParents = require('./selectFromAllParents');
+const schema = carConstruct.generateSchema(carConstants);
+const selectFromAllParents = require('./selectFromAllParents');
 const constants = {
     schema,
     generationSize: 20,
@@ -14,7 +14,7 @@ const constants = {
     gen_mutation: 0.05,
 };
 module.exports = function () {
-    var currentChoices = new Map();
+    const currentChoices = new Map();
     return Object.assign(
         {},
         constants,
