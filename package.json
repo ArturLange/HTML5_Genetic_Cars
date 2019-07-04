@@ -8,7 +8,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm run build-main && npm run build-graph",
     "build-main": "browserify --debug ./src/index.js -o ./bundle.js",
-    "build-graph": "browserify --debug ./src/bare.js -o ./bundle-bare.js"
+    "build-graph": "browserify --debug ./src/bare.js -o ./bundle-bare.js",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,8 @@
   },
   "dependencies": {
     "mersenne-twister": "^1.1.0",
-    "watch-run": "^1.2.5"
-  }
+    "watch-run": "^1.2.5",
+    "snyk": "^1.190.0"
+  },
+  "snyk": true
 }
