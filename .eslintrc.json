@@ -1,12 +1,11 @@
 {
-  "env": { },
+  "env": {},
   "plugins": [],
   "extends": [
-    "eslint:recommended"
+    "airbnb"
   ],
   "globals": {
     "Promise": true,
-    "console": true,
     "require": true,
     "Set": true,
     "Map": true,
@@ -20,13 +19,60 @@
     "module": true
   },
   "parserOptions": {
-    "ecmaVersion": 5,
+    "ecmaVersion": 6,
     "sourceType": "module",
     "impliedStrict": true
   },
   "rules": {
-    "no-use-before-define": [2, { "functions": false }],
-    "no-mixed-spaces-and-tabs": 0,
-    "no-console": 0
+    "no-use-before-define": [
+      "warn",
+      {
+        "functions": true,
+        "classes": true
+      }
+    ],
+    "no-mixed-spaces-and-tabs": "error",
+    "no-console": "warn",
+    "no-plusplus": "off",
+    // following options are set temporarily
+    "no-param-reassign": "warn",
+    "indent": [
+      "error",
+      4
+    ],
+    "prefer-destructuring": "warn",
+    "new-cap": "warn",
+    "no-mixed-operators": "warn",
+    "camelcase": "warn",
+    "no-undef": "warn",
+    "no-unused-vars": "warn",
+    "no-shadow": "warn",
+    "comma-dangle": "off",
+    "no-labels": "warn",
+    "max-len": "warn",
+    "consistent-return": "warn",
+    "guard-for-in": "warn",
+    "no-restricted-syntax": "warn",
+    "vars-on-top": "warn",
+    "no-var": "warn",
+    "prefer-const": "warn",
+    "one-var": "warn",
+    "block-scoped-var": "warn",
+    "eqeqeq": "warn",
+    "no-unused-expressions": "warn",
+    "no-restricted-globals": "warn",
+    "no-multi-assign": "warn",
+    "no-continue": "warn",
+    "no-restricted-properties": "warn",
+    "no-array-constructor": "warn",
+    "array-callback-return": "warn",
+    "no-underscore-dangle": "warn",
+    "prefer-rest-params": "warn",
+    "prefer-spread": "warn",
+    "default-case": "warn",
+    "no-void": "warn",
+    "global-require": "warn",
+    "no-loop-func": "warn",
+    "no-return-assign":"warn"
   }
 }

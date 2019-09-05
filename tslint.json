@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "tslint-config-airbnb"
+  ],
+  "rules": {
+    "no-use-before-define": [
+      "warn",
+      {
+        "functions": true,
+        "classes": true
+      }
+    ],
+    "no-console": "warn",
+    // following options are set temporarily
+    "indent": [
+      true,
+      "spaces",
+      4
+    ],
+    "ter-indent": [
+      true,
+      4
+    ],
+    "align": false
+  }
+}
